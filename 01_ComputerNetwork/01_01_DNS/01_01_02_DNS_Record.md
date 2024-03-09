@@ -130,4 +130,15 @@ In IPv6:
 IPv6 addresses are constructed differently from IPv4 addresses, and IPv6 PTR records exist in a different namespace within .arpa. IPv6 PTR records are stored under the IPv6 address, reversed and converted into four-bit sections (as opposed to 8-bit sections, as in IPv4), plus ".ip6.arpa".
 
 
+# 5 Wildcard domain
+
+
+A wildcard DNS record is a record in a DNS zone that will match requests for non-existent domain names. 
+A wildcard DNS record is specified by using a * as the leftmost label (part) of a domain name, e.g.    ` *. example.com .`
+A wildcard DNS record (catch-all DNS record) is a record in a DNS zone that can match queries for domain names that do not exist. It is created by using an asterisk (*) as a subdomain (the left part of a domain name, such as *. example.com).
+
+
+In the Domain Name System (DNS), a CNAME (Canonical Name) record is used to create an alias from one domain name to another. 
+A wildcard DNS record is a record that matches requests for non-existent subdomains
+
 
