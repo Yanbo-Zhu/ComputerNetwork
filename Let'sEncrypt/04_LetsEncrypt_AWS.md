@@ -9,10 +9,8 @@ This is a document for managing LetsEncrypt certificates on AWS using AWS Certif
 
 1 Setup
 Follow the instructions to set up the certbot and aws commands on your local machine:
-
     certbot setup
     AWS CLI setup
-
 
 
 2 LetsEncrypt
