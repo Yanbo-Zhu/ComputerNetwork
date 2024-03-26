@@ -152,7 +152,19 @@ m.root-servers.net.     602928  IN      A       202.12.27.33
 
 这里用ucloud域名提供商举例：
 假如需要使用反向DNS解析Zone的VPC为10.9.0.0/16，那么需要创建的Zone名为： 9.10.in-addr.arpa
-假如需要添加10.9.2.1，对应的域名为www.kubeinfo.cn ，那么需要添加PTR主机记录： 1.2.9.10.in-addr.arpa,  对应值为 www.kubeinfo.cn 
+在这个zone 下面， 假如需要添加10.9.2.1，对应的域名为www.kubeinfo.cn ，那么需要添加PTR主机记录： 1.2.9.10.in-addr.arpa,  对应值为 www.kubeinfo.cn 
 即可配置生效。
 
 
+
+# 7 in AWS 中配置 
+wir merken uns den sehr komisch zu parametrisierenden PowerShell Befehl, um in unserer Dev Domain künftig PTR Records gleich per User Data auch für Windows Clients im AD DNS automatisch zu erstellen
+
+In der Dev-Domain, würde ich alle Reverse-Zonen eher in AWS pflegen und nur eine Weiterleitung von ip-addr.arpa. im AD auf den AWS machen. Weil Zone splitting funktioniert dort nicht
+
+
+Ich dachte bislang immer eher dass das Windows AD das für die Windows-Maschinen managen sollte, und für alle anderen nutzen wir Route53 - und dann machen wir auf oberster Ebene in Route 53 ein Forwarding für alle für Windows reservierten Lookup Ranges hin zum WIndows DNS Server, und umgekehrt vom Windows DNS Server ein Forwarding nach Route 53 für Lookup in den anderen IP Ranges. 
+ 
+Das schränkt allerdings etwas ein, was die Aufteilung der IP Ranges angeht. 
+ 
+Deine Lösung finde ich nach unseren aktuellen Erfahrungen mit Windows DNS + Reverse Lookup schöner - sofern es im AD nicht irgendwelche blöden Abhängigkeiten gibt, dass die Authority für bestimmte Windows-interne Lookups im AD liegen muss. 
