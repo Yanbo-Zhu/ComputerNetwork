@@ -14,8 +14,20 @@ packet-switching: hosts break application-layer messages into packets
 
 ![](image/Pasted%20image%2020241021065302.png)
 
+Forwarding 是个动作, 将paket 发射出去的 action
+Route 是确认 将packet发射到那个destination 的 查找动作
 
+Name: whom would you like to reach? (object identity)
 
+Address: where is the object? (locator)
+
+Routing: each switch has to know which of his outputs should be used for a given destination address
+- Hopefully contributes to short “overall trip distance, time”
+- Some understanding of the possible routes is necessary to decide
+
+Forwarding: a packet has arrived. How to “get rid of it” in the way consistent with the routing?
+- With possibly short delay and - hopefully - little delay variation
+- Structuring of the information describing packet destination and the way routing information is stored matters for execution time
 # 3 Packet Loss
 
 ![](image/Pasted%20image%2020241021065534.png)
