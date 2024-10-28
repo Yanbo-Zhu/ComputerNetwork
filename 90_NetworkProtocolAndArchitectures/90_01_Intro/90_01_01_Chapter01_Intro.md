@@ -28,6 +28,9 @@ Routing: each switch has to know which of his outputs should be used for a given
 Forwarding: a packet has arrived. How to “get rid of it” in the way consistent with the routing?
 - With possibly short delay and - hopefully - little delay variation
 - Structuring of the information describing packet destination and the way routing information is stored matters for execution time
+
+![](image/Pasted%20image%2020241028071854.png)
+
 # 3 Packet Loss
 
 ![](image/Pasted%20image%2020241021065534.png)
