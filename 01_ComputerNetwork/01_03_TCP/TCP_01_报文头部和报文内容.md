@@ -94,6 +94,8 @@ SYN 攻击利用TCP协议缺陷，发送了大量伪造的TCP连接请求，使�
 
 ## 2.1 建立tcp连接: 三次握手Three-way Handshake
 
+
+
 一个虚拟连接的建立是通过三次握手来实现的
 
 状态： 客户端A（CLOSED），服务器B（CLOSED）
@@ -121,7 +123,57 @@ Note: ACK包就是仅ACK 标记设为1的TCP包. 需要注意的是当三此握�
 
 这就是为何连接跟踪很重要的原因了. 没有连接跟踪,防火墙将无法判断收到的ACK包是否属于一个已经建立的连接.一般的包过滤(Ipchains)收到ACK包时,会让它通过(这绝对不是个好主意). 而当状态型防火墙收到此种包时，它会先在连接表中查找是否属于哪个已建连接，否则丢弃该包
 
-## 2.2 关闭tcp连接: 四次握手Four-way Handshake 
+
+
+## 2.2 
+
+![](image/Pasted%20image%2020241028105328.png)
+
+
+![](image/Pasted%20image%2020241028105838.png)
+
+1 From local machine to google.comm, tlsv1.3 , send to destination Client Hallo 
+目的是告诉 destination server.  我 client , 支持那些 Cipher Suite .   这些 都记录在Cipher Suites 里面了  
+
+![](image/Pasted%20image%2020241028110110.png)
+
+![](image/Pasted%20image%2020241028110202.png)
+
+---
+
+
+2 
+server 回寄给 client 一个 message  内容是 Server Hello, Change Cipher Spec 
+
+![](image/Pasted%20image%2020241028110324.png)
+
+server 告诉 client 我准备用哪个 cipher suite 给你交流 
+
+![](image/Pasted%20image%2020241028110530.png)
+
+
+
+这之后的 application data 都是用这个 Cipher suite 加密的 (看他配上了 TLSv1.3 这个 protocol )
+
+![](image/Pasted%20image%2020241028110649.png)
+
+
+经过 application data 加密过后的内容 , 想要去解密 用 session key 
+![](image/Pasted%20image%2020241028111902.png)
+
+
+----
+
+
+
+
+
+
+
+
+
+
+## 2.3 关闭tcp连接: 四次握手Four-way Handshake 
 
 四次握手用来关闭已建立的TCP连接
 
@@ -135,7 +187,7 @@ Note: ACK包就是仅ACK 标记设为1的TCP包. 需要注意的是当三此握�
 
 注意: 由于TCP连接是双向连接, 因此关闭连接需要在两个方向上做。ACK/FIN 包(ACK 和FIN 标记设为1)通常被认为是FIN(终结)包.然而, 由于连接还没有关闭, FIN包总是打上ACK标记. 没有ACK标记而仅有FIN标记的包不是合法的包，并且通常被认为是恶意的
 
-## 2.3 连接复位 Resetting a connection
+## 2.4 连接复位 Resetting a connection
 
 四次握手不是关闭TCP连接的唯一方法. 有时,如果主机需要尽快关闭连接(或连接超时,端口或主机不可达), RST (Reset)包将被发送. 
 注意在，由于RST包不是TCP连接中的必须部分, 可以只发送RST包(即不带ACK标记). 但在正常的TCP连接中RST包可以带ACK确认标记
@@ -144,7 +196,7 @@ Note: ACK包就是仅ACK 标记设为1的TCP包. 需要注意的是当三此握�
 
 无效的TCP标记Invalid TCP Flags
 
-## 2.4 PSH (Push) 和URG (Urgent)标记
+## 2.5 PSH (Push) 和URG (Urgent)标记
 到目前为止，你已经看到了 SYN, ACK, FIN, 和RST 标记. 另外，还有PSH (Push) 和URG (Urgent)标记.
 
 最常见的非法组合是SYN/FIN 包. 注意: <mark>由于 SYN包是用来初始化连接的, 它不可能和 FIN和RST标记一起出现. </mark> 这也是一个恶意攻击.
@@ -157,7 +209,7 @@ Note: ACK包就是仅ACK 标记设为1的TCP包. 需要注意的是当三此握�
 
 
 
-## 2.5 包碎片注意A Note About Packet Fragmentation
+## 2.6 包碎片注意A Note About Packet Fragmentation
 
 如果一个包的大小超过了TCP的最大段长度MSS (Maximum Segment Size) 或MTU (Maximum Transmission Unit)，能够把此包发往目的的唯一方法是把此包分片。由于包分片是正常的，它可以被利用来做恶意的攻击。
 
