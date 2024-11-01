@@ -8,7 +8,6 @@ packet-switching: hosts break application-layer messages into packets
 • each packet transmitted at full link capacity
 
 
-
 # 2 Forward and Routing 
 
 

@@ -1,17 +1,20 @@
 
-# 1 Socket
+
+# 1 Application Layer and Transport Layer 
+
+![](image/Pasted%20image%2020241101202204.png)
+
+
+![](image/Pasted%20image%2020241101202312.png)
+
+
+![](image/Pasted%20image%2020241101202345.png)
+
+
+# 2 Socket
 
 
 ![](../60_01_Intro/image/Pasted%20image%2020241021072237.png)
-
-
-# 2 Internet transport protocols services
-
-![](../60_01_Intro/image/Pasted%20image%2020241021072630.png)
-
-
-
-![](../60_01_Intro/image/Pasted%20image%2020241021072652.png)
 
 
 
