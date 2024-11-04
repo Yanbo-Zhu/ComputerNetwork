@@ -92,6 +92,40 @@ Statustucs -> show addreas resolution
 ## 2.4 Dissector Pane(数据包字节区)。
 
 
-# 3 首选项设置
 
 
+# 3 Name Resolution 
+
+Edit -> Perferemces 
+激活 Resolve Network addresses 
+![](image/Pasted%20image%2020241104091056.png)
+
+
+这样显示出来的都是 dns name, 不再是 ip addresse 
+
+![](image/Pasted%20image%2020241104091157.png)
+
+
+## 3.1 显示 geographical 信息 
+
+> location lookup 
+
+注册个账户 , 去下载  geolite city 
+
+![](image/Pasted%20image%2020241104091649.png)
+
+使用下载的包 
+MaxMind database directions 
+
+![](image/Pasted%20image%2020241104091726.png)
+
+
+![](image/Pasted%20image%2020241104091750.png)
+
+
+----
+查看地址 
+
+![](image/Pasted%20image%2020241104091406.png)
+
+![](image/Pasted%20image%2020241104091355.png)
