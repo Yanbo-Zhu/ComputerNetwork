@@ -165,6 +165,52 @@ dyna.wikimedia.org.     140     IN      A       185.15.59.224
 ```
 
 
+## 1.3 nslookup 
+
+Rechnernetz课程 theorie2 
+
+Die Zuordnung von Domainnamen zu IP-Adressen erfolgt im Internet mit Hilfe des Domain Name Systems (DNS). Überprüfen Sie mittels des Kommandozeilen-Tools dig (Linux/ OS X) bzw. nslookup (Windows), welche DNS-Server für die Domain tu.berlin sowie deren Subdomains zuständig sind und welche TTL diese Einträge haben.
+
+```
+ ⚡ 🦄  nslookup -type=NS tu.berlin
+Server:  o2.box
+Address:  fe80::1
+
+DNS request timed out.
+    timeout was 2 seconds.
+Non-authoritative answer:
+tu.berlin       nameserver = dns-2.dfn.de
+tu.berlin       nameserver = dns-3.dfn.de
+tu.berlin       nameserver = ns.tu-berlin.de
+
+dns-3.dfn.de    internet address = 193.174.75.58
+dns-3.dfn.de    AAAA IPv6 address = 2001:638:d:b103::1
+ns.tu-berlin.de internet address = 130.149.7.7
+ns.tu-berlin.de AAAA IPv6 address = 2001:638:809:7::7
+dns-2.dfn.de    internet address = 193.174.75.54
+dns-2.dfn.de    AAAA IPv6 address = 2001:638:d:b102::1
+```
+
+
+https://www.tu.berlin/campusmanagement/angebot/netzwerk-an-der-tu/ip-und-dns-verwaltung
+
+- primärer Nameserver 130.149.7.7 (ns.tu-berlin.de)
+- externer, sekundärer Nameserver: 192.129.31.50 (res-1.dfn.de)
+
+
+
+
+
+query each authoritative server with:
+`nslookup tu.berlin <nameserver>`
+```
+nslookup tu.berlin ns.tu-berlin.de
+Server:  ns.tu-berlin.de
+Address:  130.149.7.7
+
+Name:    tu.berlin
+Address:  141.23.73.70
+```
 
 
 # 2 HTTP (telnet command)
