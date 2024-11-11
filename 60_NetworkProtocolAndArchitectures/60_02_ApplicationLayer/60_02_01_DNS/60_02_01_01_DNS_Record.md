@@ -8,6 +8,10 @@ DNS是互联网中一项重要的基础服务，它将简单易记的域名转�
 
 ![](image/Pasted%20image%2020241030084712.png)
 
+
+
+
+
 ![](image/Pasted%20image%2020241031221142.png)
 
 
@@ -56,8 +60,20 @@ URL转发，是指通过服务器的特殊设置，将当前访问的域名指�
 隐性URL：与显性URL类似，但隐性转发会隐藏真实的目标地址，地址栏中显示为仍为此前输入的地址。 
 
 
+# 2 ns record 的 例子 
 
-# 2 record 之间的冲突共存
+一个 ns record 
+name: tu-berlin.de
+value: ns.tu-berlin.de
+
+ns.tu-berlin.de is the host of authoritative name server for the domain tu-berlin.de 
+ns.tu-berlin.de  上面存着很多的 entry  (name , ip addresse 的对应)
+一旦访问 xxx.tu-berlin.de    就回去 ns.tu-berlin.de  这个 name server 上查询 xxx.tu-berlin.de 对应的 ip addresse 
+
+
+
+
+# 3 record 之间的冲突共存
 
  在RR值相同的情况下，同一条线路下，在几种不同类型的解析中不能共存(X为不允许)：
 
@@ -71,12 +87,12 @@ X：在相同的RR值情况下，同一条线路下，不同类型的解析记�
 
 
 
-# 3 DNS A Record
+# 4 DNS A Record
 
 https://www.cloudflare.com/zh-cn/learning/dns/dns-records/dns-a-record/
 
 
-## 3.1 什么是 DNS A记录？
+## 4.1 什么是 DNS A记录？
 
 “A”代表“地址”，这是最基础的 [DNS](https://www.cloudflare.com/learning/dns/what-is-dns/) 记录类型：它表示给定[域](https://www.cloudflare.com/learning/dns/glossary/what-is-a-domain-name/)的 [IP 地址](https://www.cloudflare.com/learning/dns/glossary/what-is-my-ip-address/)。比如，拉取 cloudflare.com 的 DNS 记录，A 记录当前返回的 IP 地址为：104.17.210.9。
 
@@ -92,7 +108,7 @@ A 记录只保存 IPv4 地址。如果一个网站拥有 IPv6 地址，它将改
 
 绝大多数网站只有一个 A 记录，但可以有多个。一些高知名度网站有数个不同的 A 记录，作为[循环负载均衡](https://www.cloudflare.com/learning/dns/glossary/round-robin-dns/)技术的一部分，该技术可以将请求流量分配到托管相同内容的多个 IP 地址中的一个。
 
-## 3.2 什么时候使用 DNS A 记录？
+## 4.2 什么时候使用 DNS A 记录？
 
 A 记录最常见的用途是 IP 地址查找：将域名（如“cloudflare.com”）与 IPv4 地址进行匹配。这让用户的设备能够连接和加载网站，而无需用户记住和输入实际的 IP 地址。用户的 Web 浏览器通过向 [DNS 解析器](https://www.cloudflare.com/learning/dns/dns-server-types/)发送查询来自动完成此过程。
 
@@ -100,7 +116,7 @@ DNS A 记录还用于运营基于域名系统的黑洞名单 (DNSBL)。DNSBL 可
 
 如果您想了解有关 DNS A 记录的更多信息，可在[此处](https://tools.ietf.org/html/rfc1035)查看原始 1987 RFC，其中定义了 A 记录和几个其他 DNS 记录类型。要了解有关域名系统工作原理的更多信息，请参阅[什么是 DNS？](https://www.cloudflare.com/learning/dns/what-is-dns/)
 
-# 4 DNS PTR (pointer record)
+# 5 DNS PTR (pointer record)
 
 https://www.cloudflare.com/learning/dns/dns-records/dns-ptr-record/
 
@@ -109,7 +125,7 @@ https://www.cloudflare.com/learning/dns/dns-records/dns-ptr-record/
  长成这样 ： 1.2.0.192.in-addr.arpa  -> ivu-cloud.local 
  
 ![](image/Pasted%20image%2020240305110222.png)
-## 4.1 What is a DNS PTR record
+## 5.1 What is a DNS PTR record
 
 A Record:  domain name -> ip addresss
 DNS pointer record:  ip addesse -> domain name 
@@ -122,7 +138,7 @@ When a user attempts to reach a domain name in their browser, a DNS lookup occur
 A reverse DNS lookup is the opposite of this process: it is a query that starts with the IP address and looks up the domain name.
 
 
-## 4.2 How are DNS PTR records stored
+## 5.2 How are DNS PTR records stored
 
 In IPv4:
 While DNS A records are stored under the given domain name, DNS PTR records are stored under the IP address — reversed, and with ".in-addr.arpa" added. For example, the PTR record for the IP address 192.0.2.255 would be stored under "255.2.0.192.in-addr.arpa".
@@ -136,7 +152,7 @@ In IPv6:
 IPv6 addresses are constructed differently from IPv4 addresses, and IPv6 PTR records exist in a different namespace within .arpa. IPv6 PTR records are stored under the IPv6 address, reversed and converted into four-bit sections (as opposed to 8-bit sections, as in IPv4), plus ".ip6.arpa".
 
 
-# 5 Wildcard domain
+# 6 Wildcard domain
 
 
 A wildcard DNS record is a record in a DNS zone that will match requests for non-existent domain names. 
