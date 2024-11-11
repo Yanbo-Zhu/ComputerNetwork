@@ -232,9 +232,6 @@ TLS: Transport Layer Security  传输层安全协议
 
 他们主要用于 在 internet 上数据传输的安全性和完整性 
 
-
-
-
 看[[使用数字证书通讯]] 
 
 ## 10.2 加密验证方式 
