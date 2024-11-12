@@ -76,6 +76,6 @@ client 从 dhcp 中获取一些信息的过程
 ![](image/Pasted%20image%2020241105193709.png)
 
 
-
+![](image/Pasted%20image%2020241112210457.png)
 
 
