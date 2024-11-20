@@ -52,6 +52,8 @@ bytes_read = read(fd, buf, bytes);
 ## 2.2 Remote Procedure Calls (RPC)
 
 
+==**Remote Procedure Call (RPC)** is a protocol or technique that allows a program to execute a procedure or function on a remote server as if it were local==. It abstracts the complexities of network communication, enabling developers to write distributed applications more easily.
+
 Why we need Remote Procedures?
 - The client needs an easy way to ==call the procedures of the server to get some services==.
 - RPC enables clients to communicate with servers by calling procedures in a similar way to the conventional use of procedure calls in high-level languages.

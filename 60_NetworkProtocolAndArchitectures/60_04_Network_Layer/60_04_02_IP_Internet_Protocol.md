@@ -79,3 +79,58 @@ client 从 dhcp 中获取一些信息的过程
 ![](image/Pasted%20image%2020241112210457.png)
 
 
+
+
+# 6 special IP address types
+
+On most Operating Systems, there are several ways to find out your own IP addresses. On the command line, the ip address command (or ip a for short) usually works on Linux and Mac OS, ipconfig /all usually works on Windows.
+
+## 6.1 Loopback IP addresses
+The loopback IP address (commonly `127.0.0.1` for IPv4 and `::1` for IPv6) is used by a device to refer to itself. It is primarily used for testing and debugging local network applications without requiring external communication.
+
+## 6.2 Multicast IP addresses
+Multicast IP addresses are used to send data to multiple devices simultaneously, often in the same network segment. IPv4 multicast addresses range from `224.0.0.0` to `239.255.255.255`, while IPv6 multicast addresses start with `ff00::/8`.
+
+## 6.3 Link-local IP addresses
+Link-local IP addresses are automatically assigned to network interfaces for ==communication within the same physical or logical link==. IPv4 link-local addresses range from `169.254.0.0/16`, and IPv6 link-local addresses start with `fe80::/10`
+
+- Prefix: `fe80::/10`
+- Example: `fe80::1`  
+    These addresses are automatically assigned to interfaces and used only within the local link.
+
+## 6.4 Private Unicast IP address 
+Private IP ranges are designated for use within private networks (LANs) and are not routable on the public internet. They include:
+- `10.0.0.0/8` (10.0.0.0 – 10.255.255.255)
+- `172.16.0.0/12` (172.16.0.0 – 172.31.255.255)
+- `192.168.0.0/16` (192.168.0.0 – 192.168.255.255)
+Example: `192.168.1.1` (a common private IP used in home routers).
+
+Unique Local Addresses (ULA):
+ipv6的形式
+- Prefix: `fc00::/7`
+- Example: `fd00::1`  
+    ULAs are equivalent to private IPv4 addresses, used within private networks.
+## 6.5 Global Unicast Addresses
+
+ipv4 的形式 
+Any IPv4 address not in the private ranges above or reserved ranges (e.g., multicast `224.0.0.0/4`) is a global unicast address. These are routable on the internet.
+Example: `8.8.8.8` (Google DNS).
+
+ipv6 的形式 
+Global unicast addresses in IPv6 are the equivalent of public IP addresses in IPv4. These are routable on the internet and used to ==uniquely identify devices globally across networks.== They are assigned by the Internet Assigned Numbers Authority (IANA) or regional registries.
+- Prefix: `2000::/3`
+- These addresses are routable on the internet.
+- Example: `2001:db8::1` (documentation address).
+
+**Key Features:**
+- They begin with the prefix `2000::/3`. For example, `2001:db8::` is a commonly used documentation address.
+- Unlike link-local addresses (which operate only within the local network), global unicast addresses can reach devices worldwide if routing is properly configured.
+- Each device with a global unicast address can be uniquely identified on the internet.
+Global unicast addresses are primarily used for communication between devices across different networks and the public internet. This includes web browsing, remote access, and communication between servers.
+
+
+## 6.6 Link-local 和 Global Unicast Addresses 的区别
+Devices with a global unicast address can reach hosts on the Internet. Link-local addresses only allow communication within the same local link or subnet.
+
+
+
