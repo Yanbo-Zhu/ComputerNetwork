@@ -12,3 +12,17 @@ analyze -> enable protocol
 
 ![](image/Pasted%20image%2020241028085300.png)
 
+
+# 2 regex的使用 
+https://osqa-ask.wireshark.org/questions/22376/filtering-with-a-regular-expression/
+
+frame matches "(attachment|exe|zip)"
+![](image/Pasted%20image%2020241120203314.png)
+
+http.request.uri matches "(attachment|exe|zip)"
+
+![](image/Pasted%20image%2020241120203349.png)
+
+`frame matches "User-Agent: \\r\\n$"` 
+`dns.qry.name matches "berlin$"`用$ 代表 berlin 后面还有只
+![](image/Pasted%20image%2020241120203627.png)
