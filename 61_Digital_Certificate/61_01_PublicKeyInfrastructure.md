@@ -1,5 +1,13 @@
 
-# 1 COMPONENTS
+# 1 digital certificate  到底来用来干啥的 
+
+用来在 TLS handshake 的时候, 验证 双方之间的身份 , 直到双方是谁 , 然后 可以开始传输信息了
+传输信息的时候不用到 digital certificate 
+
+![](image/Pasted%20image%2020241121143103.png)
+
+
+# 2 COMPONENTS
 
 
 ![](image/Pasted%20image%2020241120224015.png)
@@ -31,7 +39,7 @@ List of digital certificates that have been revoked before their delivery date
 **End Entities**
 Users, devices, and systems that use digital certificates to secure their communication
 
-# 2 CERTIFICATES?
+# 3 CERTIFICATES
 
 - X.509 certificates are based on a widely used standard for digital certificates to authenticate the identity of entities and secure communication in various networking environments
 - They are integral part of the PKI and enable secure data exchange by binding a public key to an entity
@@ -45,7 +53,7 @@ USE CASES
 - VPN and Network Authentication: X.509 certificates are used to authenticate devices connecting to a Virtual Private Network (VPN)
 
 
-# 3 HOW TO GET A CERTIFICATE FROM A SERVER WITH OPENSSL
+# 4 HOW TO GET A CERTIFICATE FROM A SERVER WITH OPENSSL
 
 
 ![](image/Pasted%20image%2020241120225132.png)
@@ -62,7 +70,7 @@ openssl x509 -in tu-berlin-cert.pem -text -noout > tu-berlin-cert-details.txt
 
 
 
-# 4 解释证书中的各个值
+# 5 解释证书中的各个值
 
 
 ```
@@ -248,7 +256,7 @@ Certificate:
 
 ![](image/Pasted%20image%2020241121093755.png)
 
-## 4.1 一些基础信息 
+## 5.1 一些基础信息 
 
 ![](image/Pasted%20image%2020241121095539.png)
 
@@ -275,7 +283,7 @@ Certificate:
     - Common Name field historically carries the subject's primary identifiers, but modern standards and software strongly recommend using the Subject Alternative Name (SAN) extension
 
 
-## 4.2 x509v3 extensions
+## 5.2 x509v3 extensions
 
 ![](image/Pasted%20image%2020241121095604.png)
 
@@ -314,7 +322,7 @@ Certificate:
     - Lists the policies under which the certificate was issued
 - Authority Information Access
     - includes the URL of the CA where issued certificate can be retrieved and the URL of the Online Certificate Status Protocol (OCSP) responder
-### 4.2.1 CT Precertificate SCTSs
+### 5.2.1 CT Precertificate SCTSs
 
 ![](image/Pasted%20image%2020241121101524.png)
 
@@ -328,7 +336,7 @@ CT Precertificate SCTSs
 
 
 
-### 4.2.2 key usages
+### 5.2.2 key usages
 - Key Usage
     - Defines the permitted uses of the key (e.g., digital signature, key encipherment)
     - `X509v3 Key Usage: critical , Digital Signature, Key Encipherment`   
@@ -341,7 +349,7 @@ Conforming CAs must include this extension in certificates that are used to vali
 
 ![](image/Pasted%20image%2020241121102344.png)
 
-### 4.2.3 Extended Key Usage Extension
+### 5.2.3 Extended Key Usage Extension
 
 The Extended Key Usage Extension indicates one or more purposes for which the certified public key may be used, in addition to or in place of the basic purposes indicated in the key key usage extension
 
@@ -352,13 +360,13 @@ If a certificate contains both a key usage extension and an extended key usage e
 
 
 
-# 5 DOMAIN, ORGANIZATION, AND EXTENDED VERIFICATION
+# 6 DOMAIN, ORGANIZATION, AND EXTENDED VERIFICATION
 
 
 
 ![](image/Pasted%20image%2020241121103247.png)
 
-## 5.1 DOMAIN VALIDATION CERTIFICATES
+## 6.1 DOMAIN VALIDATION CERTIFICATES
 
 ![](image/Pasted%20image%2020241121103843.png)
 没有 Organisation 项
@@ -379,7 +387,7 @@ CA verifies that the applicant has control over the domain, which is achieved by
 ... adding a TXT record with a provided verifi cation string to the domain's DNS record
 ... placing a fi le with a verifi cation string under a predefi ned path in the domain's web root
 
-## 5.2 ORGANIZATION VALIDATION CERTIFICATES
+## 6.2 ORGANIZATION VALIDATION CERTIFICATES
 
 ![](image/Pasted%20image%2020241121104037.png)
 
@@ -401,7 +409,7 @@ CA checks...
 
 Verifi cation includes manual vetting by the CA, such as verifying business records and calling the organization's listed contact
 
-## 5.3 EXTENDED VALIDATION CERTIFICATES
+## 6.3 EXTENDED VALIDATION CERTIFICATES
 
 ![](image/Pasted%20image%2020241121104303.png)
 
@@ -424,7 +432,7 @@ CA performs extensive checks, including...
 
 For the vetting process, the CA must adhere to EV guidelines established by the CA/Browser Forum
 
-# 6 BASELINE REQUIREMENTS FOR TLS SERVER CERTIFICATES
+# 7 BASELINE REQUIREMENTS FOR TLS SERVER CERTIFICATES
 
 The Baseline Requirements for the Issuance and Management of Publicly-Trusted TLS Server Certifi cates are a set of standards established by the CA/Browser Forum
 
@@ -446,14 +454,14 @@ The Baseline Requirements document defi nes the rules a CA has to follow:
 
 
 
-# 7 THE LIFE CYCLE OF A DIGITAL CERTIFICATE
+# 8 THE LIFE CYCLE OF A DIGITAL CERTIFICATE
 
 ![](image/Pasted%20image%2020241121105231.png)
 
 
-# 8 generate a digital certificate 
+# 9 generate a digital certificate 
 
-## 8.1 GENERATING A CERTIFICATE SIGNING REQUEST WITH OPENSSL
+## 9.1 GENERATING A CERTIFICATE SIGNING REQUEST WITH OPENSSL
 
 
 A _certificate signing request_ (_CSR_) is one of the first steps towards getting your own SSL/TLS certificate.
@@ -465,7 +473,7 @@ In [public key infrastructure](https://en.wikipedia.org/wiki/Public_key_infrastr
 
 ![](image/Pasted%20image%2020241121105405.png)
 
-## 8.2 APPLYING FOR A DIGITAL CERTIFICATE
+## 9.2 APPLYING FOR A DIGITAL CERTIFICATE
 
 ![](image/Pasted%20image%2020241121105744.png)
 
@@ -474,7 +482,7 @@ In [public key infrastructure](https://en.wikipedia.org/wiki/Public_key_infrastr
 
 
 
-## 8.3 CERTIFICATE AUTOMATION WITH ACME
+## 9.3 CERTIFICATE AUTOMATION WITH ACME
 
 
 ![](image/Pasted%20image%2020241121105905.png)
@@ -509,7 +517,7 @@ Revocation: If a certificate needs to be revoked, the ACME client can communicat
 
 
 
-# 9 CERTIFICATE CHAINS
+# 10 CERTIFICATE CHAINS
 
 
 ![](image/Pasted%20image%2020241121110507.png)
@@ -518,19 +526,28 @@ Revocation: If a certificate needs to be revoked, the ACME client can communicat
 
 ![](image/Pasted%20image%2020241121110528.png)
 
-## 9.1 root CAs
+
+![](image/Pasted%20image%2020241121142110.png)
+
+系统会一口气拿到 三个证书 (root ca 颁发的 certificate, intermediate ca 颁发的 certificate, 和 由 最末ca 给 end-entity办法的 certificate ).  然后用 root 的 certificate 一级级向下解锁 
+
+---
+
 
 ![](image/Pasted%20image%2020241121110801.png)
 
 
-CA3 生成 tu.berlin 的 电子签名 
-tu.berlin 的 电子签名  包含了 tu.berlin 的 publickey, tu.berlin的 信息 和 signature which is issued by CA3 
-Signature which is issued by CA3  是 CA3用自己的 private key  生成的.  CA3将这个 digital signture 封印在 tu.berlin 的 电子签名  中 
-用 CA3 的public key  可以去解密  tu.berlin 的电子签名  
+
+- CA3 生成 tu.berlin 的 电子签名 
+- tu.berlin 的 电子签名  包含了 tu.berlin 的 publickey, tu.berlin的 信息 和 signature which is issued by CA3 
+- Signature which is issued by CA3  是 CA3用自己的 private key  生成的.  CA3将这个 digital signture 封印在 tu.berlin 的 电子签名 中
+- ca3 sign the certificate of tu.berlin though the private key of ca3 
+- 用 CA3 的public key  可以去解密  tu.berlin 的电子签名 
 
 ---
 
 ROOT STORES
+Root 都会放到 os 系统内置的  root stores 里面 
 
 ![](image/Pasted%20image%2020241121112500.png)
 
@@ -542,7 +559,7 @@ ROOT STORES
 - If a root certificate is not found in the Trusted Root Store, the system will alert the user with a warning that the certificate is untrusted
 
 
-# 10 CERTIFICATE REVOCATION
+# 11 CERTIFICATE REVOCATION
 
 revocation 就是 使得一个  issued digital certificate 失效 
 
@@ -560,8 +577,174 @@ REASONS FOR CERTIFICATE REVOCATION
 
 
 
+## 11.1 CERTIFICATE REVOCATION LISTS (CRL)
+
+Revocation List (CRL) is a list of revoked certificates published by the CA. It includes the serial numbers of revoked certificates, the dates of revocation, and, optionally, the reason of revocation
+
+就是 CRL 中包含了 那些 certificated 已经不管用了 
+
+
+---
+
+![](image/Pasted%20image%2020241121150632.png)
+
+certificate 中包含了 CRL Distribution Points 的 uri 
+
+```
+X509v3 CRL Distribution Points: 
+    Full Name:
+      URI:http://GEANT.crl.sectigo.com/GEANTOVRSACA4.crl
+```
 
 
 
 
+---
+
+![](image/Pasted%20image%2020241121144649.png)
+
+![](image/Pasted%20image%2020241121144255.png)
+
+
+---
+
+![](image/Pasted%20image%2020241121144803.png)
+
+1. A browser loads a CA's CRL from a CRL Distribution Point, listed in the corresponding field in the certificate provided by the web server
+2. The browser compares the certificate's serial number with the CRL and, in case of a match, denies the connection
+3. The CRL is locally cached by the browser – if another certificate from the same CA is loaded, the serial number is compared with the cached copy of the CRL
+4. If the cached copy exceeds the date specified in the "Next Update" field, a fresh version is requested from the CRL Distribution Point
+
+
+经过和 crl 核实后 , 发现 browser 收到的 certificate 已经 revoked 了.  那 authentication (browser 和 web server) 之间 没有成功 
+
+## 11.2 get CRL from a ca server 
+
+![](image/Pasted%20image%2020241121145613.png)
+
+
+
+## 11.3 ONLINE CERTIFICATE STATUS PROTOCOL (OCSP)
+
+
+OCSP responser 是部署在 ca 上面的 , ocsp 是去 和 ca 去查某个 certificate 的 revocation status 的
+
+allows a client to query the CA for the revocation status of a single single certificate The CA runs a OCSP Responder that answers such queries
+
+---
+
+
+certificate 的 pem 中 会有写 ocsp respsonser 的地址 
+
+![](image/Pasted%20image%2020241121150651.png)
+
+
+
+
+---
+
+
+![](image/Pasted%20image%2020241121151037.png)
+
+Clients locate the OCSP responder for a certificate by using using a URL that is contained in the certificate's Authority Information Access (AIA) extension
+
+Each OCSP must contain a given certificate's serial number along with a hash of of the issuer's name and public key so that CAs can verify that they issued the certificate before responding
+
+
+----
+
+
+![](image/Pasted%20image%2020241121151335.png)
+
+The OCSP Responder returns a signed response that
+includes the following information:
+
+- certId: The serial number of the queried certifi cate
+- thisUpdate and nextUpdate: Range of time for which the response is valid (for caching)
+- producedAt: Time at which the response was. generated
+- certStatus: The certifi cate's revocation status:
+- Good: The certificate is not revoked
+- Revoked: Indicating that the certificate has been revoked temporarily or permanently, or was never issued by this CA
+- Unknown: Certificate is not served by this OCSP Responder
+
+![](image/Pasted%20image%2020241121151453.png)
+
+
+## 11.4 CRL VS OSCP
+
+![](image/Pasted%20image%2020241121151507.png)
+
+
+
+## 11.5 OCSP STAPLING
+
+==With OCSP Stapling, the web server periodically fetches the OCSP Response from the CA and caches it==
+When a client connects to a server, the server "staples" (includes) the OCSP Response in the TLS handshake, eliminating the need of the client to contact the OCSP server directly
+
+
+![](image/Pasted%20image%2020241121151632.png)
+
+
+
+
+BENEFITS
+Improved performance: reduction of latency, as the client does not need to send an additional request to the OCSP Responder
+Enhanced privacy: the CA gets no information about clients visiting the web site Reduced load on CA servers: fewer direct OCSP Requests are sent to the responder
+
+
+PROBLEM
+Web browsers often ignore the absence of the OCSP Response and accept the connection anyway
+OCSP Must-Stable is an optional extension to be included in SSL/TLS certifi cates
+The extension tells clients that they should expect a stapled OCSP Response from the server and block the connection in case of its absence
+
+
+# 12 CERTIFICATE TRANSPARENCY LOGS
+
+
+![](image/Pasted%20image%2020241121151819.png)
+
+
+用**Certificate transparency (CT)**  去记录 certificate 的状态发生改变的历史 
+**Certificate transparency (CT)** is a framework developed by Google to provide an open and verifiable log of certificates issued by CAs
+
+Goal: prevent the issuance of rogue or unauthorized certificates by making all certificates publicly visible, which allows for detection of misissuance and increases accountability among CAs
+
+Certificate Issuance
+- When a CA issues a certificate, it submits a precertificate to one or more **Certificate Transparency Logs (CT Logs)**
+- The CT Log returns a **Signed Certificate Timestamp (SCT)**, a cryptographic proof that the certificate has been logged
+- The SCTs of several logs are embedded in an extension field of the final certificate
+- A Precertificate is a special, provisional version of a certificate that a CA generates as part of the CT process\
+- Purpose of a Precertificate is to allow the CA to submit a record of the certificate to CT logs, ensuring that is will be publicly visible before it is deployed 
+- Precertificates are not accepted by browsers and contain important attributes of the final certificate like subject, public key, and serial number
+
+
+SCT Verification
+- When a client connects to a website, it verifies the SCTs to ensure that the certifi cate has been logged in a CT Log
+- If the certificate does not have a valid SCT or the SCT cannot be verified, the client may show a warning or block the connection
+
+
+Monitoring and Auditing
+- Domain owners and security professionals can use monitors to track certificates issued for their domains
+- Auditors and clients regularly check the logs for consistency and to detect any attempts at tampering
+
+
+## 12.1 Precertificate 
+
+A **Precertificate** is a preliminary certificate issued by a CA that serves as a placeholder in the CT system. It is submitted to CT Logs before the final certificate is issued. Here's why precertificates are used:
+1. **Proof of logging**: Before issuing the final certificate, CAs use precertificates to verify that the certificate has been properly logged in CT Logs.
+2. **Avoid confusion**: They prevent CT Logs from logging the actual end-entity certificate directly, which could cause issues if the certificate is modified after being logged.
+3. **Embedding SCTs**: Precertificates include Signed Certificate Timestamps (SCTs), which are evidence from CT Logs that the certificate will be or has been logged.
+
+How It Works
+1. **Precertificate generation**: The CA creates a precertificate containing all fields of the final certificate but with an additional extension to indicate it is a precertificate.
+2. **Logging**: The CA submits the precertificate to CT Logs and receives an SCT for it.
+3. **Final certificate issuance**: ==The CA embeds the SCTs in the final certificate and issues it to the domain owner.==
+
+## 12.2 **Signed Certificate Timestamp (SCT)**
+
+![](image/Pasted%20image%2020241121153603.png)
+
+## 12.3 Monitoring and Auditing
+
+![](image/Pasted%20image%2020241121153742.png)
 
