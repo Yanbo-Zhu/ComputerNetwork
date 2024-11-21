@@ -312,7 +312,7 @@ CA 会将 生成的数字证书 和 CA 公钥 发给 user
 
 例子 
 
-![](image/Pasted%20image%2020241121110801.png)
+![](../../../62_Digital_Certificate/image/Pasted%20image%2020241121110801.png)
 
 
 CA3 生成 tu.berlin 的 电子签名 
