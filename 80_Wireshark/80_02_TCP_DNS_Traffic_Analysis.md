@@ -99,3 +99,24 @@ Why?
 Answer: you can see the answer as HTTP/1.1 301 Method Moved, which says that the document has moved to https://inet.tu-berlin.de 
 Then you can see a new TCP connection being established and a TLS handshake
 The rest of the communication is encrypted , so you can not see the content of the web page 
+
+
+# 3 DNS 例子2
+
+
+In dieser Aufgabe versuchen wir nachzuvollziehen wie ein Aufruf von YouTube abläuft und wie das verwendete CDN arbeitet. Rufen Sie dazu ein YouTube Video auf, während Sie den Netzwerktraffic mit Wireshark mitschneiden.
+
+Hinweis: Durch gecachten Inhalt kann es sein, dass sie nicht die volle Anfrage sehen, falls Sie die Website bereits besucht haben. Um dies zu vermeiden starten Sie gegebenenfalls das System vor dem Test neu. Eure Teampartner erhalten unter Umständen andere Ergebnisse, vergleicht diese.
+
+
+1. Welche DNS Anfragen werden ausgelöst? Welcher der Hosts liefert vermutlich die eigentliche Website aus? Welcher Host stellt die Videodaten bereit?
+2. Wieso werden mehr Anfragen als nur youtube.com gestellt?
+3. Welche CDN Mechanismen werden verwendet?
+4. In der Vorlesung wurde besprochen, dass große Datenmengen (wie z.B. Videos) möglichst nah beim Nutzer gespeichert werden um Netzwerkkapazität zu sparen. Versuchen Sie herauszufinden, wo sich der Server befindet, der diese Daten ausliefert. 2 Überprüfen Sie ob dieser Standort plausibel ist, beispielsweise indem Sie die Latenz via ping testen.
+
+
+
+
+
+
+
