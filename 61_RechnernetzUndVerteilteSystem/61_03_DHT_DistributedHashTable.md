@@ -324,3 +324,41 @@ Figure 10: N42 节点的路由表
 
 
 
+# 5 Achieving Robustness
+
+- To improve robustness each node maintains the k (> 1) immediate successors instead of only one successor
+- In the notify() message, node A can send its k-1 successors to its predecessor B
+- Upon receiving notify() message, B can update its successor list by concatenating the successor list received from A with A itself
+
+
+![](image/Pasted%20image%2020241121211518.png)
+
+
+# 6 What Makes a Good DHT Design?
+
+The number of neighbors for each node should remain “reasonable” (small degree)
+- DHT routing mechanisms should be decentralized (no single point of failure or bottleneck)
+- Should gracefully handle nodes joining and leaving
+- Repartition the affected keys over existing nodes
+- Reorganize the neighbor sets
+- Bootstrap mechanisms to connect new nodes into the DHT
+
+DHT must provide low stretch
+- Minimize ratio of DHT routing vs. unicast latency between two nodes
+
+
+# 7 Open DHT Architecture
+
+![](image/Pasted%20image%2020241130214051.png)
+
+
+Open DHT Deployment Model
+- A single DHT (namely, Open DHT) is shared across multiple applications, thus amortizing the cost of deployment.
+    - 一个 Open DHT 网络 中有多个 DHT node
+- Each DHT node serves as a gateway into the DHT for clients.
+- Any Internet-connected computer can act as client:
+    - Clients of Open DHT do not need to run a DHT node
+    - ==Using DHT services, i.e., can store or put key-value pairs in Open DHT, and can retrieve or get the value stored under a particular key==
+- ==An Open DHT client communicates with the DHT through the gateway of its choice using an RPC over TCP. The gateway processes the operations on client´s behalf.==
+- Because of this, the service is easy to access from virtually every programming language.
+
