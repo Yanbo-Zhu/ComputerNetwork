@@ -407,7 +407,7 @@ high peak bitrate
 low latency 
 large traffic capacity 
 
-通过 millimeter wave frequence 实现 
+通过 millimeter wave frequencies 实现 
 
 ![](image/Pasted%20image%2020241205220122.png)
 
