@@ -1,6 +1,8 @@
 
 # 1 MAC addresses
 
+Media Access Control) address
+
 32-bit IP address:
 - network-layer address for interface
 - used for layer 3 (network layer) forwarding
