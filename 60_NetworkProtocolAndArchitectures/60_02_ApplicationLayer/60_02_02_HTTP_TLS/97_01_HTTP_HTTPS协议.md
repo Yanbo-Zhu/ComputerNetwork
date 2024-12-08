@@ -1,5 +1,19 @@
 
-# 1 URL 
+
+# 1 Overview 
+
+HTTP: hypertext transfer protocol
+- Web’s application layer protocol
+- client/server model:
+    - client: browser that requests, receives, (using HTTP protocol) and “displays” Web objects
+    - server: Web server sends (using HTTP protocol) objects in response to requests
+
+![](image/Pasted%20image%2020241208215536.png)
+
+
+
+
+# 2 URL 
 
 
 ![](image/Pasted%20image%2020241031221639.png)
@@ -8,18 +22,32 @@
 
 > stateless: server maintains no information about past client requests 
 
-# 2 HTTP use TCP 
+# 3 HTTP use TCP 
 
 
 ![](../../60_01_Intro/image/Pasted%20image%2020241021073237.png)
 
+HTTP uses TCP:
+- client initiates TCP connection (creates socket) to server, port 80
+- server accepts TCP connection from client
+- HTTP messages (application-layer protocol messages) exchanged between browser (HTTP client) and Web server (HTTP server)
+- TCP connection closed
+
+Non-persistent HTTP
+1. TCP connection opened
+2. at most one object sent over TCP connection
+3. TCP connection closed
+downloading multiple objects required multiple connections
+
+Persistent HTTP
+- TCP connection opened to a server
+- multiple objects can be sent over single TCP connection between client, and that server
+- TCP connection closed
 
 
-![](../../60_01_Intro/image/Pasted%20image%2020241021073429.png)
 
 
-
-# 3 三次握手 
+## 3.1 Non-persistent HTTP
 
 
 
@@ -27,7 +55,22 @@
 
 ![](../../60_01_Intro/image/Pasted%20image%2020241021073534.png)
 
-# 4 HTTP Request 
+
+## 3.2 Persistent HTTP
+
+Non-persistent HTTP issues:
+- requires 2 RTTs per object
+- OS overhead for each TCP connection
+- browsers often open multiple parallel TCP connections to fetch referenced objects in parallel
+
+
+Persistent HTTP (HTTP1.1):
+- server leaves connection open after sending response
+- subsequent HTTP messages between same client/server sent over open connection
+- client sends requests as soon as it encounters a referenced object
+- as little as one RTT for all the referenced objects (cutting response time in half)
+
+# 4 HTTP Request message
 
 
 ![](image/Pasted%20image%2020241031223127.png)
@@ -52,8 +95,9 @@
 
 
 POST method:
-• web page often includes form input
-• user input sent from client to server in entity body of HTTP POST request message
+- 可以在原来的数据的后面新加入数据, 不为 idempotent
+- web page often includes form input
+- user input sent from client to server in entity body of HTTP POST request message
 
 GET method (for sending data to server):
 • include user data in URL field of HTTP GET request message (following a '?'):
@@ -63,8 +107,9 @@ HEAD method:
 requests headers (only) that would be returned if specified URL were requested with an HTTP GET method.
 
 PUT method:
-• uploads new file (object) to server
-• completely replaces file that exists at specified URL with content in entity body of POST HTTP request message
+- 彻底覆盖原来的数据, 为 idempotent
+- uploads new file (object) to server
+- completely replaces file that exists at specified URL with content in entity body of POST HTTP request message
 
 
 - `GET`：请求资源数据，通常只读。
