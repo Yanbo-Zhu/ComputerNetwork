@@ -1,4 +1,6 @@
 
+
+
 # 1 THE TCP HANDSHAKE
 
 ![](image/Pasted%20image%2020241201001000.png)
@@ -18,6 +20,15 @@
 
 ![](image/Pasted%20image%2020241201001511.png)
 
+- TLS uses a two-way handshake to negotiate cryptographic parameters to protect connection
+- Client starts by sending ClientHello
+- Server responds with ServerHello
+    - Server selects among the possible options provided by the client
+    - Picks highest TLS version supported by both, makes choice of algorithm/ keying material
+    - Where ClientHelloincludes lists, ServerHelloonly includes single items
+- Optionally: Server can send ClientHelloRetry
+
+
 # 3 TLS  BASICS
 
 
@@ -29,6 +40,16 @@ Authentication: Verifies the identity of one or both parties (e.g., server authe
 Data Integrity: Ensures that data has not been tampered with during transmission using cryptographic checks (e.g., Message Authentication Code)
 
 
+
+- TLS –Transport Layer Security
+- Successor to SSL, currently at version 1.3 (RFC 8446)
+- Used to protect application layer data
+    - Eavesdropping, tampering and forgery
+    - Provides Authentication, integrity and confidentiality
+- Above rest of transport layer, agnostic to underlying transport if it has certain properties (e.g., reliable)
+- Uses cryptographic schemes to protect payload (ECDHE)
+    - Cryptographic computations etc. not focus of this lecture, just protocol
+    
 ## 3.1 TLS IN THE PROTOCL STACK
 
 ![](image/Pasted%20image%2020241201002002.png)
@@ -62,7 +83,75 @@ RECORD PROTOCOL
 - Decrypt incoming messages with the secret key
 - Verify the integrity and authenticity of the messages
 
+## 3.3 TLS Record Protocol and TLS Handshake Protocol 怎么一起工作的 
+
+
+The TLS Record Protocol and the TLS Handshake Protocol are key components of the Transport Layer Security (TLS) protocol. They work together to establish and maintain a secure communication channel between two endpoints. Here's an overview:
+
+How They Work Together
+    The TLS Handshake Protocol runs first to set up the encryption keys, protocols, and other parameters for secure communication.
+    Once the handshake is complete, the TLS Record Protocol takes over to encrypt and transport application data securely.
+
+
+Simplified Example of a TLS Handshake:
+1. **Client Hello**:
+    - The client sends a list of supported protocols and cryptographic algorithms.
+2. **Server Hello**:
+    - The server selects compatible options and provides its certificate for authentication.
+3. **Key Exchange**:
+    - Both parties exchange key material to generate a shared secret.
+4. **Finished**:
+    - Both sides confirm the handshake, and secure communication begins via the Record Protocol.
+
+
+---
+
+The **TLS Record Protocol** is responsible for securing and transporting data. It breaks the data into smaller units (records) and ensures that these records are securely delivered to the recipient.
+
+Responsibilities:
+1. **Fragmentation**:
+    - Divides data into manageable chunks (records).
+2. **Compression** (optional):
+    - Compresses data before transmission (rarely used in modern TLS implementations).
+3. **Integrity and Authenticity**:
+    - Adds a Message Authentication Code (MAC) to protect against tampering.
+4. **Encryption**:
+    - Encrypts the data using the algorithms agreed upon during the handshake phase.
+5. **Transmission**:
+    - Sends the encrypted data over the network.
+
+
+Data Flow:
+- Application Layer Data → Fragmentation → (Optional: Compression) → Add MAC → Encrypt → Transmit.
+
+---
+
+
+TLS Handshake Protocol
+
+The **TLS Handshake Protocol** is used to negotiate security parameters and establish a secure connection. It is a key step in the initialization of a TLS session.
+
+Responsibilities:
+1. **Protocol and Algorithm Negotiation**:
+    - Determines the TLS version (e.g., TLS 1.2, TLS 1.3) and cryptographic algorithms (e.g., AES, RSA).
+2. **Authentication**:
+    - Authenticates the server and optionally the client using certificates (X.509).
+3. **Key Exchange**:
+    - Establishes shared secret keys using techniques like Diffie-Hellman or RSA.
+4. **Session Establishment**:
+    - Completes the handshake by finalizing parameters and enabling encrypted communication.
+
+
+
+
 # 4 TLS RECORD PROTOCOL
+
+- As soon as possible, all traffic will be encrypted
+    - Depending on what mode is used (PSK or KE), starting mid handshake
+- Secrets exchanged are only part of traffic keys that are used to encrypt
+    - Other parts include hash over entire handshake
+- Key derivation functions (i.e. HKDF) is used to extend secrets to longer keys for protection
+- Keys (should be) updated periodically for various reasons
 
 
 ![](image/Pasted%20image%2020241201002527.png)
@@ -162,4 +251,78 @@ Multiple variants, but only three covered here
 ### 5.3.3 ANONYMOUS DH
 
 ![](image/Pasted%20image%2020241201010114.png)
+
+# 6 TLS HANDSHAKE
+
+
+
+![](image/Pasted%20image%2020241210230240.png)
+
+
+## 6.1 Packet Formats
+
+![](image/Pasted%20image%2020241210231133.png)
+
+
+## 6.2 Handshake –Extensions
+
+- In each handshake packet, many extensions fields can be included to further negotiate properties of connection
+- Some properties will result in connection failure if the peer doesn't support them, others wont
+- Also included in extensions are:
+    - Supported crypto algorithms
+    - Keying material
+    - In TLS1.3 and above, the highest supported TLS version
+    - This is done here instead of the version field in the ClientHellofor backwards compatibility in middleboxes
+
+![](image/Pasted%20image%2020241210231248.png)
+
+## 6.3 Key exchange mode
+
+- Client sends list of supported crypto suits/ elliptic curve groups
+- Client also sends required crypto bits for each group
+    - Doesn't have to be complete, can include a supported group without keying material
+    - The server will then reply with HelloRetryRequestto allow the client to generate missing keying material
+    - Useful for newer encryption schemes for which peer support is unknown and creating keying material is costly
+
+## 6.4 Pre shared key mode
+
+提前共享 Pre shared key mode
+
+- Can be used to reduce delay by allowing 0-RTT data
+    - E.g., Client can send (early) application data with ClientHello
+- Can be either issued with NewSessionTicket messages for future connections or provisioned out of band
+    - Useful if multiple connections between same server and client are expected
+- E.g., multiple HTTP connections for websites etc.
+    - Tickets have a certain lifetime as well so they can be used for future sessions
+
+![](image/Pasted%20image%2020241210231918.png)
+
+
+
+## 6.5 FULL HANDSHAKE
+
+![](image/Pasted%20image%2020241209005013.png)
+
+
+
+A ClientHello message is sent to the server by the client to initiate the TLS handshake
+The message contains a random number to prevent replay attacks, the client's key share according to DH or ECDH (calculated
+before only for this session), a list of cipher suites and signature algorithms supported by the client
+The message may contain optional fi elds like Server Name Indication (in case the server serves multiple domains),
+Application-Layer Protocol Negotiation, and a SessionId (for backward compatibility with TLS 1.2)
+The message is sent in plaintext and unsigned
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
