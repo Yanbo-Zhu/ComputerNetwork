@@ -97,35 +97,36 @@ Persistent HTTP (HTTP1.1):
 ![](image/Pasted%20image%2020241208203219.png)
 
 
-- GET: ruft Daten vom Server ab. (Beispiel: Abrufen einer Webseite)
-- POST: sendet Daten an den Server, z. B. um eine neue Ressource zu erstellen. (Beispiel: Absenden eines Formulars)
-- PUT: aktualisiert oder erstellt eine Ressource. (Beispiel: Hochladen oder Ersetzen von Daten)
-- DELETE: löscht eine Ressource. (Beispiel: Entfernen eines Datensatzes)
-- HEAD: holt nur die Header-Informationen der Ressource. (Beispiel: Prüfen, ob eine Datei existiert)
+- GET: 
+    - ruft Daten vom Server ab. (Beispiel: Abrufen einer Webseite)
+    - (for sending data to server)
+    - Abfragen einer Ressource
+    - 请求资源数据，通常只读。
+    - include user data in URL field of HTTP GET request message (following a '?'): www. some site . com/animalsearch?monkeys &banana
+- POST: 
+    - sendet Daten an den Server, z. B. um eine neue Ressource zu erstellen. (Beispiel: Absenden eines Formulars)
+    - Generell: Anhängen/erweitern von Daten einer bestehenden Ressource oder erstellen einer neuen Ressource die noch nicht definiert ist. Jedoch: Semantik laut RFC 7321 nicht näher festgelegt.
+    - 提交数据，创建资源或执行某些处理。
+    - 可以在原来的数据的后面新加入数据, 不为 idempotent
+    - web page often includes form input
+    - user input sent from client to server in entity body of HTTP POST request message
+- PUT: 
+    - aktualisiert oder erstellt eine Ressource. (Beispiel: Hochladen oder Ersetzen von Daten)
+    - uploads new file (object) to server
+    - completely replaces file that exists at specified URL with content in entity body of POST HTTP request message
+    - Erstellen oder Ersetzen einer Ressource (unter einer gegebenen URI) mit der mitgeschickten Repräsentation in der Nachricht
+    - 更新或创建资源，发送完整的资源信息。
+    -  彻底覆盖原来的数据, 为 idempotent
+- DELETE: 
+    - löscht eine Ressource. (Beispiel: Entfernen eines Datensatzes)
+    - requests headers (only) that would be returned if specified URL were requested with an HTTP GET method.
+    - Entfernen einer Ressource
+- HEAD: 
+    - holt nur die Header-Informationen der Ressource. (Beispiel: Prüfen, ob eine Datei existiert)
+    - 类似 GET，但只获取响应头。
+    - Identisch zu GET, außer dass der Server nur mit einem Header antwortet
 - OPTIONS: fragt die unterstützten HTTP-Methoden des Servers ab.
 - PATCH: Teilaktualisierung einer Ressource.
-
-- `GET`：请求资源数据，通常只读。
-- `POST`：提交数据，创建资源或执行某些处理。
-- `HEAD`：类似 GET，但只获取响应头。
-- `PUT`：更新或创建资源，发送完整的资源信息。
-
-POST method:
-- 可以在原来的数据的后面新加入数据, 不为 idempotent
-- web page often includes form input
-- user input sent from client to server in entity body of HTTP POST request message
-
-GET method (for sending data to server):
-include user data in URL field of HTTP GET request message (following a '?'):
-www. some site . com/animalsearch?monkeys &banana
-
-HEAD method:
-requests headers (only) that would be returned if specified URL were requested with an HTTP GET method.
-
-PUT method:
-- 彻底覆盖原来的数据, 为 idempotent
-- uploads new file (object) to server
-- completely replaces file that exists at specified URL with content in entity body of POST HTTP request message
 
 
 - **GET**:
@@ -369,3 +370,27 @@ This is good as it improves scalability on the server-side
 This is also bad as some applications need persistent state
 - Need to uniquely identify user or store temporary info
 - e.g., shopping cart, user preferences/profiles, usage tracking,
+
+
+----
+
+persistent : Verbindung bleibt nach anfrage bestehen 
+nicht persistent : server schließt Verbinding, nachdem er Antwort empfangen habt.   Neue Request , setzen eine neuer verbidnungsaufbau 
+
+Zustandslos bedeutet in diesem Fall, dass **der Server keine Informationen über den Client-State speichert und verwaltet**==. Stattdessen muss der Client bei jeder Anfrage bzw. bei jedem Aufruf explizit Informationen zu seinem Status mitübergeben. ==
+
+对应的例子 
+Um Informationen, wie zum Beispiel einen Warenkorb, zu speichern, kann der Server den Warenkorb in einer Datenbank mit einer eindeutigen ID speichern. Wenn der Client also den ersten Artikel zum Warenkorb hinzufügt, kann der Server eine neue Bestellung in der Datenbank anlegen, und die entsprechende ID dem Client als Antwort zusenden. Möchte der Client nun den nächsten Artikel dem Warenkorb hinzufügen, muss er die entsprechende Warenkorb ID mit übergeben, damit der Server den Artikel der Bestellung in der Datenbank hinzufügen kann. Bei jedem weiteren Aufruf wird vom Client nun immer diese ID als Zusatzinformation mitübergeben, wodurch der Server den Warenkorb bestimmen kann.
+
+# 12 Port
+
+In TCP und UDP erlauben Ports die Zuordnung der eingehenden Datenpakete zur richtigen Applikation. Dadurch lassen sich mehrere Datenströme auf einem Host multiplexen.
+
+# 13 persistenten Verbindungen
+
+Bei persistenten Verbindungen wird die einer HTTP-Anfrage zugrundeliegende ==TCP-Verbindung vom Server offen gehalten==, auch nachdem sie ausgeführt wurde. Danach kann Sie wieder verwendet werden für Folgeanfragen, um Ressourcen vom gleichen Server abzufragen (z.B. eingebettete Bilder, Skripte, Stylesheets, etc.). Dadurch spart man sich den zeitaufwändigen Verbindungsaufbau gleich mehrfach.
+
+
+
+
+

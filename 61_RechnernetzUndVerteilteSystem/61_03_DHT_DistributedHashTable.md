@@ -61,7 +61,7 @@ Solution of problem
 
 一个节点怎样高效地知道在网络中的哪个节点包含它所寻找的数据
 
-## 3.1 ### Chord 基本要素
+## 3.1 Chord 基本要素
 
 节点 ID：NID（node identifier），表示一个物理机器，m 位的一个数字（m 要足够大以保证不同节点的 NID 相同的几率小的可以忽略不计），由节点机器的 IP 地址通过哈希操作得到。  
 
@@ -72,6 +72,8 @@ Solution of problem
 首先，每条文件索引被表示成一个(K, V)对.   
 K称为关键字，可以是文件名（或文件的其他描述信息）的哈希值，
 V是实际存储文件的节点的 IP 地址（或节点的其他描述信息）
+
+![](image/Pasted%20image%2020241213224735.png)
 
 ## 3.2 Chord环
 
@@ -128,6 +130,11 @@ Figure 6: 简单的资源定位方法（效率不高）
 ，于是得知资源 K54 在 N56 这个节点上。  
 
 在一个有 N 个节点的环上，这样的查找方法显然在最坏的时候要查找 N 次才能得到所需资源的位置，查找次数与节点个数成线性关系。显然，这样的效率不给力，所以 Chord 使用了可伸缩资源定位的方式来提高效率。
+
+
+### 3.3.1 例子3
+
+![](image/Pasted%20image%2020241213224942.png)
 
 ## 3.4 Chord: Joining Operation 
 
@@ -214,6 +221,13 @@ C、后继指针和路由表项都不正确：此时查找失败，Chord 上层�
 
 2）、效率方面：当 stabilization 完成时，对查找效率的影响不会超过 O(log N) 的时间。当 stabilization 未完成时，在目标节点和目标节点的后继处加入非常多个节点时才会有性能影响。可以证明，只要路由表调整速度快于网络节点数量加倍的速度，性能就不受影响
 
+
+### 3.4.3 例子3
+
+![](image/Pasted%20image%2020241213225007.png)
+
+![](image/Pasted%20image%2020241213225013.png)
+
 ## 3.5 Chord: lookup 可伸缩方法（with Finger table ） 
 
 在每个节点 N 上都维护了最多有 m 项（m 为 ID 的位数）的路由表（称为 finger table），用来定位资源。这个表的第i 项是该节点的后继节位置，至少包含到 2^(i-1) 后的位置。还是延续上边的例子。
@@ -236,9 +250,23 @@ C、后继指针和路由表项都不正确：此时查找失败，Chord 上层�
 - 在n的Finger表中，找出与hash(Key)距离近期且<hash(Key)的n的successor，该节点也是Finger表中最接近Key的predecessor，把查找请求转发到该节点
 - 继续上述过程，直至找到Key相应的节点
 
+> Was ist die allgemeine Formel zum Ausrechnen des i-tenWertes in der Finger Table des Knotens mit der ID n bei Chord
+![](image/Pasted%20image%2020241213225150.png)
 
 
-### 3.5.2 例子 1
+### 3.5.2 zeitkomplezitat 比较 
+
+> Wie vereinfacht eine Finger Table den Chord Lookup?
+ 
+Der durchschnittliche Aufwand eine beliebige ID im Ring zu erreichen verringert sich von O(n) Schritten zu O(log n) Schritten, wobei jeder Knoten nur m Tabelleneinträge aktuell halten muss.
+
+Ohne Fingertable: 
+==Der Anzahl der verschickten Nachrichten pro Anfrage ==stiege linear mit der Anzahl der Knoten, also O( n ). 
+
+
+Mit Fingertable: 
+==Der Anzahl der verschickten Nachrichten pro Anfrage ==stiege linear mit der Anzahl der Knoten, also O( log n ). 
+### 3.5.3 例子 1
 
 
 
@@ -290,7 +318,7 @@ Figure 10: N42 节点的路由表
 
 ，则说明 N51 这个点离持有 K54 这个资源的节点最近，那么此时跳到 N51 这个节点上继续查找。N51 节点的后继节点为 N56，符合 ，此时定位完成，N56 持有资源节点 K54。
 
-### 3.5.3 例子2 
+### 3.5.4 例子2 
 
 > finger table 只要 从 2^0 计算到 2^(m-1) 就好了 
 
@@ -299,6 +327,31 @@ Figure 10: N42 节点的路由表
 ![](image/Pasted%20image%2020241121211759.png)
 
 ![](image/541830a75d1ada81ebe013f8ff8068a.jpg)
+
+
+
+### 3.5.5 例子3 
+
+![](image/Pasted%20image%2020241213225252.png)
+
+![](image/Pasted%20image%2020241213225243.png)
+
+![](image/Pasted%20image%2020241213225316.png)
+
+![](image/Pasted%20image%2020241213225328.png)
+
+---
+
+Eine Distributed Hash Table benutzt Chord als Implementierung identisch mit Aufgabe 2. Die Keys haben eine Länge von 8 bit. Es sind acht Knoten vorhanden.
+1. In welchen Knoten sind die Werte mit den Keys 99 bzw. 240 jeweils gespeichert?
+2. Knoten 108 möchte erfahren, welcher Knoten für den Key 77 zuständig ist. Zeichnen sie die notwendigen Nachrichten für die Abfrage in die Grafik von Aufgabe 3 ein, wenn keine Finger Tables benutzt werden. Welche Knoten-ID wird dem anfragenden Knoten gemeldet?
+3. Wie viele Nachrichten werden ohne Benutzung von Finger Tables maximal benötigt, um im dargestellten System von einem beliebigen Knoten einen beliebigen Key abzufragen?
+
+• lookup(99) → 108
+• lookup(240) → 52
+
+![](image/Pasted%20image%2020241213225657.png)
+
 
 ## 3.6 Chord 节点失败的处理
 
@@ -361,4 +414,81 @@ Open DHT Deployment Model
     - ==Using DHT services, i.e., can store or put key-value pairs in Open DHT, and can retrieve or get the value stored under a particular key==
 - ==An Open DHT client communicates with the DHT through the gateway of its choice using an RPC over TCP. The gateway processes the operations on client´s behalf.==
 - Because of this, the service is easy to access from virtually every programming language.
+
+
+# 8 Mesh-Overlay und DHT
+
+Betrachten Sie eine verteilte Hashtabelle (DHT) mit einem Mesh-Overlay-Netzwerk (das heißt, alle Peers kennen alle anderen Peers im System). Was sind die Vor- und Nachteile eines solchen Systems? Was sind die Vor- und Nachteile einer DHT mit Ringstruktur (ohne Finger Table)?
+
+Mesh-Overlay-Netzwerk:  (Ein vollvermaschtes Netzwerk)
+Ein vollvermaschtes Netzwerk könnte Anfragen jeweils direkt an den zuständigen Knoten weiterleiten und hätte daher geringe Latenzzeiten. Der Anzahl der verschickten Nachrichten pro Anfrage wäre konstant, also O(1). Jedoch müsste jeder Knoten eine Liste mit potentiell tausenden Knoten speichern und vor allem aktuell halten. Das Beitreten und Verlassen des Netzwerks von Knoten erzeugt somit großen Aufwand und skaliert schlecht mit der Größe des Netzwerks.
+
+
+DHT mit Ringstruktur: 
+In einer DHT mit Ringstruktur wie z.B. Chord, dauert es ggf. länger eine Anfrage an den richtigen Knoten zuzustellen, als in einem vollvermaschten Netzwerk. ==Der Anzahl der verschickten Nachrichten pro Anfrage ==stiege linear mit der Anzahl der Knoten, also O(n). Jedoch muss jeder Knoten jeweils nur seinen Vorgänger bzw. Nachfolger kennen, was den Prozess des Beitretens und Verlassens erheblich vereinfacht, da der Zustand von nur zwei Knoten aktualisiert werden muss.
+
+# 9 一些问答
+
+![](image/Pasted%20image%2020241213224724.png)
+
+1
+Welches minimale Interface bieten DHTs mindestens an (3 Funktionen) und was tun diese Funktionen?
+
+• lookup(key) → value bzw. get(key) → value
+• insert(key) bzw. set(key)
+• delete(key)
+
+Um Verwirrung zu vermeiden, verwenden wir den Begriff lookup ausschließlich für die Zuständigkeitsabfrage für einen gewissen Schlüssel und nicht für die Abfrage des Wertes. Aus historischen Gründen ist dieser Begriff leider mehrfach belegt.
+
+![](image/Pasted%20image%2020241213224748.png)
+
+---
+2 Wieso ist es einfach, verschiedene Anwendungen mit der selben DHT Software zu betreiben? Funktioniert das auch gleichzeitig?
+
+Das Interface einer DHT ist sehr generisch und kann im Prinzip überall dort verwendet werden, wo eine global verfügbare Schlüssel-Wert-Zuordnung sinnvoll ist. Mehrere Anwendungen können auch gleichzeitig die selbe DHT benutzen, wenn ihre Schlüsselmengen disjunkt sind (z.B. durch ein anwendungsspezifisches Präfix).
+
+![](image/Pasted%20image%2020241213224758.png)
+
+
+---
+3 Welche Probleme gibt es mit der Dynamizität und der Größe solcher DHTs? Wie sind jeweils die Lösungen, die in der Vorlesung vorgestellt werden?
+
+
+Dynamizität: 
+In einer verteilten Hashtabelle soll die Last möglichst gleichmäßig auf den Knoten verteilt werden. Gleichzeitig ändert sich die Anzahl der Knoten aber ständig. Der Schlüsselraum (hash space) darf also nicht von der Anzahl der Knoten abhängig sein, da sonst ständig alle Werte den Ort wechseln müssten.
+Daher benutzt man einen fixen Schlüsselraum sog.** konsistentes Hashing** und ordnet die Zuständigkeit anhand einer Metrik dem “ähesten” Knoten zu. Wenn die IDs der Knoten dann zufällig gewählt werden, sollte die Zuständigkeit annähernd gleich verteilt sein.
+
+Größe/Skalierbarkeit: 
+In einer DHT müssen alle Anfragen zu dem jeweils zuständigen Knoten gelangen. In einem naiven Ansatz müsste dazu jeder Knoten jeden anderen Knoten im Netzwerk kennen. Aber so ein vollvermaschtes Netzwerk ist sehr schwierig aufrecht zu erhalten, ab einer gewissen Größe.
+
+Stattdessen muss eine DHT eine Art Routing-Mechanismus anwenden um die Nachrichten über mehrere Zwischenstationen zuverlässig ans Ziel zu bringen. In Chord dient dazu die Ring-Struktur. Dieses Routing zu optimieren ist Gegenstand der aktuellen Forschung.
+
+![](image/Pasted%20image%2020241213224814.png)
+
+
+---
+4 Erinnern Sie sich an die Struktur von DNS. Welche Strukturen haben DHTs im Vergleich zu DNS?
+
+DNS und DHT erfüllen prinzipiell ähnliche Aufgaben: 
+Zuordnung von Schlüssel (bzw. Name) zu einem Wert. DNS ist dabei in einem strikt hierarchischen Baum organisiert mit den Root-DNS-Servern an der Wurzel, wohingegen DHTs typischerweise nicht hierarchisch aufgebaut sind und Knoten ein peer des anderen ist.
+
+![](image/Pasted%20image%2020241213224851.png)
+
+----
+5  Wie funktioniert der Chord Lookup?
+
+![](image/Pasted%20image%2020241213224921.png)
+
+---
+6 Wie funktioniert die Chord Joining Operation?
+
+
+---
+7 Was versteht man unter latency stretch (Formel und Erklärung)?
+
+Latency Stretch ist ein Faktor welcher beschreibt wie die Overlay-Topologie  (also bei Chord die Ring- Struktur) durchschnittlich die Latenzzeiten vergrößert im Vergleich zu einem vollvermaschten Netwerk, bei dem jede Anfrage den direkten Weg nehmen würde.
+
+![](image/Pasted%20image%2020241213224617.png)
+
+![](image/Pasted%20image%2020241213225024.png)
 
