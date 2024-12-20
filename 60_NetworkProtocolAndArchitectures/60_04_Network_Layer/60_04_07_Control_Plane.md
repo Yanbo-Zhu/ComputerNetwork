@@ -35,7 +35,45 @@ Remote controller computes, installs forwarding tables in routers
 ![](image/Pasted%20image%2020241112195502.png)
 
 
-# 3 Routing protocols
+# 3 Routing table 
+
+![](image/Pasted%20image%2020241220161830.png)
+
+
+# 4 longest prefix match 
+
+Longest Prefix Match (LPM) is a fundamental algorithm used in computer networking, particularly in IP routing. It determines the best route for a packet by finding the most specific (longest) matching prefix in a routing table.
+
+How It Works
+1. **Routing Table:** Contains entries with destination prefixes (e.g., `192.168.0.0/16`, `192.168.1.0/24`).
+2. **IP Packet:** Has a destination IP address (e.g., `192.168.1.5`).
+3. **Match:** The router checks which prefix in the routing table matches the destination IP address.
+4. **Longest Prefix:** Among all matching prefixes, the one with the longest mask (most bits) is chosen because it is the most specific route.
+
+
+
+Example
+Routing Table
+
+|Prefix|Next Hop|
+|---|---|
+|`192.168.0.0/16`|Router A|
+|`192.168.1.0/24`|Router B|
+|`10.0.0.0/8`|Router C|
+
+Incoming Packet
+Destination IP: `192.168.1.5`
+
+Matching Process
+1. Compare `192.168.1.5` with `192.168.0.0/16`.
+    - Matches: First 16 bits are the same.
+2. Compare `192.168.1.5` with `192.168.1.0/24`.
+    - Matches: First 24 bits are the same.
+3. The longest matching prefix is `192.168.1.0/24` (24 bits), so the packet is forwarded to **Router B**.
+
+
+
+# 5 Routing protocols
 
 Routing protocol goal: determine “good” paths (equivalently, routes), from sending hosts to receiving host, through network of routers 
 
@@ -59,12 +97,12 @@ Routing algorithm classification
 ![](image/Pasted%20image%2020241112195909.png)
 
 
-## 3.1 link state
+## 5.1 link state
 
 ![](image/Pasted%20image%2020241112200118.png)
 
 
-## 3.2 distance vector
+## 5.2 distance vector
 
 ![](image/Pasted%20image%2020241112200336.png)
 
@@ -72,7 +110,7 @@ Routing algorithm classification
 
 
 
-## 3.3 Comparison of LS and DV algorithms
+## 5.3 Comparison of LS and DV algorithms
 
 ![](image/Pasted%20image%2020241112200427.png)
 
@@ -81,7 +119,7 @@ Routing algorithm classification
 
 
 
-# 4 Internet approach to scalable routing
+# 6 Internet approach to scalable routing
 
 
 aggregate router into Region / Autonomous system AS
@@ -91,7 +129,7 @@ aggregate router into Region / Autonomous system AS
 forwarding table 
 ![](image/Pasted%20image%2020241119224450.png)
 
-# 5 intra-AS routing: OSPF (Open Shortest Path First )
+# 7 intra-AS routing: OSPF (Open Shortest Path First )
 
 
 OSPF: Open Shortest Path First 
@@ -106,7 +144,7 @@ Hierarchical OSPF
 
 backbone 中的 router 负责向 其他 as 中 发送数据源 
 
-# 6 inter-AS routing: AS routing:  BGP (Border Gateway Protocol):
+# 8 inter-AS routing: AS routing:  BGP (Border Gateway Protocol):
 
 BGP 高知别人 你这个 as 的存在 
 
@@ -132,7 +170,7 @@ BGP provides each AS a means to:
 ![](image/Pasted%20image%2020241120093748.png)
 
 
-## 6.1 BGP path advertisement
+## 8.1 BGP path advertisement
 
 从 AS 3 发送 X 到 AS1 
 ![](image/Pasted%20image%2020241120093616.png)
@@ -148,7 +186,7 @@ BGP provides each AS a means to:
 ![](image/Pasted%20image%2020241120094500.png)
 
 
-## 6.2 Why different Intra--, Inter AS routing
+## 8.2 Why different Intra--, Inter AS routing
 
 policy:
 inter AS: admin wants control over how its traffic routed, who routes through its network
@@ -162,7 +200,7 @@ intra AS: can focus on performance
 inter AS: policy dominates over performance
 
 
-## 6.3 Hot potato routing
+## 8.3 Hot potato routing
 
 ![](image/Pasted%20image%2020241120094835.png)
 
@@ -171,7 +209,7 @@ inter AS: policy dominates over performance
 
 2d 想要到达 as3 , 明显 走 2c 更近. 但是还是选择了 2a, 因为 他短视, 到 2a 的 link-cost 更低 , 相比于2c 
 
-## 6.4 BGP: achieving policy via advertisements
+## 8.4 BGP: achieving policy via advertisements
 
 provider network 更加优先选用自己的 customer network 而不是别人的 
 B choosees not to advertise BAw to C, either BxC 
@@ -183,7 +221,7 @@ B choosees not to advertise BAw to C, either BxC
 
 
 
-## 6.5 BGP route selection
+## 8.5 BGP route selection
 优先级最上的 最优先被使用
 
 router may learn about more than one route to destination
@@ -193,7 +231,7 @@ AS, selects route based on:
 3. closest NEXT HOP router: hot potato routing
 4. 4.additional criteria
 
-# 7 Software defined networking (SDN) control plane
+# 9 Software defined networking (SDN) control plane
 
 
 旧的方式  Per-router control plane  
@@ -208,7 +246,7 @@ Individual routing algorithm components in each and every router interact in the
 ![](image/Pasted%20image%2020241120124845.png)
 
 
-## 7.1 (SDN) control plane 的优点和缺点
+## 9.1 (SDN) control plane 的优点和缺点
 
 
 优点 
@@ -226,7 +264,7 @@ controller) congestion levels
 
 
 
-## 7.2 Traffic engineering: difficult with traditional routing
+## 9.2 Traffic engineering: difficult with traditional routing
 
 
 有点时候 需要重新定义 link weights 
@@ -240,7 +278,7 @@ controller) congestion levels
 
 
 
-## 7.3 Software defined networking (SDN) architecture 
+## 9.3 Software defined networking (SDN) architecture 
 
 
 ![](image/Pasted%20image%2020241120125835.png)
@@ -260,7 +298,7 @@ controller) congestion levels
 
 ![](image/Pasted%20image%2020241120132156.png)
 
-## 7.4 OpenFlow protocol
+## 9.4 OpenFlow protocol
 
 OpenFlow Controller 和 switcher 之间的联系 
 
@@ -278,7 +316,7 @@ OpenFlow Controller 和 switcher 之间的联系
 ![](image/Pasted%20image%2020241120132541.png)
 
 
-### 7.4.1 一个例子
+### 9.4.1 一个例子
 
 当switcher 之间在传输包裹的时候遇到link failure ,  switcher 将包裹的控制权交给 controller . controller通过 更上层的centric的routing 算法 updated link status info. 
 然后  在这个switcher 中安装新的 flow table, 告诉 switcher 该将这个 package 发给那个 switcher 的那个 port
@@ -291,17 +329,17 @@ OpenFlow Controller 和 switcher 之间的联系
 
 
 
-## 7.5 SDN implementation
+## 9.5 SDN implementation
 
-### 7.5.1 OpenDaylight (ODL) controller
+### 9.5.1 OpenDaylight (ODL) controller
 
 ![](image/Pasted%20image%2020241120140756.png)
 
-### 7.5.2 ONOS controller
+### 9.5.2 ONOS controller
 
 ![](image/Pasted%20image%2020241120140809.png)
 
-# 8 Internet Control Message Protocol
+# 10 Internet Control Message Protocol
 
 
 ![](image/Pasted%20image%2020241120134830.png)
@@ -311,7 +349,7 @@ OpenFlow Controller 和 switcher 之间的联系
 ![](image/Pasted%20image%2020241120134850.png)
 
 
-# 9 network management and configuration
+# 11 network management and configuration
 
 Device, hardware的管理h和配置更新 
 
@@ -322,7 +360,7 @@ Network management includes the deployment, integration and coordination of the 
 
 ![](image/Pasted%20image%2020241120135314.png)
 
-## 9.1 SNMP (Simple Network Management Protocol)
+## 11.1 SNMP (Simple Network Management Protocol)
 
 Operator queries/sets devices data (MIB) using Simple Network Management Protocol (SNMP)
 
@@ -340,14 +378,14 @@ Operator queries/sets devices data (MIB) using Simple Network Management Protoco
 
 
 
-## 9.2 NETCONF/YANG
+## 11.2 NETCONF/YANG
 
 - more abstract, network wide, holistic
 - emphasis on multi device configuration management.
 - YANG: data modeling language
 - NETCONF: communicate YANG compatible actions/data to/from/among remote devices
 
-### 9.2.1 NETCONF
+### 11.2.1 NETCONF
 
 ![](image/Pasted%20image%2020241120135757.png)
 
@@ -358,7 +396,7 @@ Operator queries/sets devices data (MIB) using Simple Network Management Protoco
 
 ![](image/Pasted%20image%2020241120140045.png)
 
-### 9.2.2 YANG
+### 11.2.2 YANG
 
 ==data modeling language used to specify structure, syntax, semantics of NETCONF network management data==
 

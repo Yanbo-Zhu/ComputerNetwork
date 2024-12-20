@@ -43,7 +43,7 @@ the first 24 bit are subnet part
 
 # 5 DHCP: How does host get IP address?
 
-Dynamic Host Configuration Protocol: dynamically get address from as server
+Dynamic Host Configuration Protocol:  host dynamically  obtains IP address from network server when it "joins" network 
 
 DHCP 的意义是获取 ip address of xx from network server 
 
