@@ -244,10 +244,221 @@ Wenn man denselben POST-Request erneut ausführt, wird ==ein weiterer Eintrag er
 
 ![](image/Pasted%20image%2020241208203522.png)
 
+- **_HTTP Header Fields_** transportieren wichtige Argumente und Parameter für die Verarbeitung einer HTTP-Nachricht beim Empfänger
+- Werden im Header einer HTTP-Nachricht direkt nach der Anfrage- bzw. Antwortzeile in Form von Schlüssel/Wert-Paaren (Key/value pairs) übertragen
+
+
+BEISPIELE FÜR HTTP-HEADER FIELDS
+![](image/Pasted%20image%2020250106115320.png)
+
+## 6.1 Artern von Header Fields
+
+![](image/Pasted%20image%2020250106115415.png)
+
+
+**Standardized Header Fields**
+- Müssen in allen HTTP-Implementierungen unterstützt werden
+- Grundlage bildet der RFC 2616 mit Erweiterungen in RFC 4229 der IETF
+
+**Customized Header Fields**
+- Entwickler können eigene Header Fields für ihre Anwendungen definieren
+- (veraltete) Konvention: Kennzeichnung durch den Präfix "X-"
+
+**Request Header Fields**
+- Werden in HTTP-Anfragen übertragen
+- Enthalten Informationen über die angeforderte Ressource oder über den Client, der die Ressource anfordert
+
+**Response Header Fields**
+- Werden in HTTP-Antworten übertragen
+- Liefern Informationen über die Antwort oder über den Server
+
+**End-to-End Header Fields**
+- Sind für den finalen Empfänger der Nachricht bestimmt
+- Müssen durch Gateways unverändert weitergeleitet werden
+
+**Hop-by-Hop Header Fields**
+- Sind für einen Empfänger auf einer Teilstrecke der Ende-zu-Ende-Verbindung bestimmt, z.B. ein Gateway
+- Werden in der Regel nicht weitergeleitet
+
+**Forbidden Header Fields**
+- Dürfen nicht durch JavaScript gelesen, verändert oder gesetzt werden
+- Grund: Manipulation durch JavaScript ermöglicht Angriffe
+
+**Representation Header Fields**
+- Enthalten Informationen über die im Body enthaltene Ressource, z.B. MIME type oder über die verwendete Codierung und Komprimierung
+
+
+## 6.2 Accept UND Content-Type-HEADER
+
+Header Fields einer HTTP-Anfrage (Auszug)
+![](image/Pasted%20image%2020250106115808.png)
+
+Header Fields einer zugehörigen HTTP-Antwort (Auszug)
+![](image/Pasted%20image%2020250106115820.png)
+
+- `**Accept**`-Header einer Anfrage gibt an, welche MIME-Typen der Client verarbeiten kann und bevorzugt
+- `**image/avif**` (AV1 Image File Format) ist ein neues Bildformat mit einer hohen Kompressionseffizienz
+- `**image/webp**` ist ein von Google entwickeltes Bildformat
+- `**image/apng**` (Animated Portable Network Graphics) ist eine Erweiterung von PNG
+- `**image/svg+xml**` ist ein XML-basiertes Vektorformat
+- `**image/***` bedeutet, dass der Client alle MIME-Typen akzeptieren kann, die unter image/ fallen
+- `***/*; q=0.8**` bedeutet, dass der Client alle Medientypen mit einer Priorität von 0.8 (von 0..1) akzeptiert
+- `**Content-Type**`-Header gibt den MIME-Typ der Inhalte im Body der Antwort an
+
+# 7 Cookies 
+
+为什么需要 Cookies: HTTP GET/response interaction is stateless
+> Web sites and client browser use cookies to maintain some state between transactions
+
+Client-side state maintenance
+- Client stores small (?) state on behalf of server
+- Client sends state in future requests to the server
+Can provide authentication
+
+
+What cookies can be used for: Cookies 的用途 
+▪ authorization
+▪ shopping carts
+▪ recommendations
+▪ user session state (Web e-mail)
+
+---
+
+
+![](image/Pasted%20image%2020250106120046.png)
+
+- HTTP ist ein zustandsloses Protokoll: Seitenaufrufe vom selben Browser können durch das Protokoll nicht zugeordnet werden
+- Behelfsmaßnahme: Einführung von Cookies
+- Kleine Dateneinheiten mit Textinformationen
+- Austausch von Cookies zwischen Webserver und Browser (und umgekehrt) zur Erkennung wiederkehrender Nutzer
+- Anwendungen
+    - Einkaufswagen auf eCommerce-Seiten
+    - Vermeidung expliziter Nutzerauthentifizierung durch Passworteingabe bei jedem Seitenaufruf
+    - Maßschneiderung von Webseiten
+    - Tracking von Nutzern
+
+
+## 7.1 Set-Cookie UND Cookie-HEADER
+
+
+![](image/Pasted%20image%2020241031224142.png)
+
+
+four components:
+1) cookie header line of HTTP response message
+2) cookie header line in next HTTP request message
+3) cookie file kept on user’s host, managed by user’s browser
+4) back-end database at Web site
+
+![](image/Pasted%20image%2020241021103143.png)
 
 
 
-# 7 Repsone Code/ Status Code 
+![](image/Pasted%20image%2020250106120612.png)
+
+- Cookies werden durch `**Set-Cookie**` in der HTTP-Antwort durch den Server im Browser gesetzt
+- Nachfolgende Anfragen an denselben Server enthalten das gesetzte Cookie in `**Cookie**`
+- Werden in Cookies SessionIDs übertragen, dürfen diese niemals in vorhersehbarer Reihenfolge  z.B. aufsteigend, absteigend, usw.) generiert werden
+- SessionIDs sollten immer mit "sicheren" Zufallszahlengeneratoren erzeugt werden
+
+
+
+## 7.2 Der Cookie-Lebenszyklus
+
+![](image/Pasted%20image%2020250106121542.png)
+
+## 7.3 Cookie-Attribute 
+
+![](image/Pasted%20image%2020250106121749.png)
+
+Cookie-Attribute 
+- `**Domain**`-Attribut legt fest, zu welcher Domain ein gesetztes Cookie gehört
+- Wenn `**Domain**` gesetzt ist, wird das Cookie dieser Domain und ihrer Subdomains gegenüber offengelegt
+- Wenn `**Domain**` nicht definiert ist, wird das Cookie nur der Domain gegenüber offengelegt, die es gesetzt hat, aber nicht in ihren Subdomains
+
+- `**Path**`-Attribut definiert den Pfad innerhalb der Domain, für den das Cookie gültig ist
+- Das Cookie wird nur an Anfragen an diesen Pfad und dessen Unterverzeichnisse angehängt
+- Wenn `**Path**` nicht definiert ist, wird das Cookie nur an Anfragen an diesen Pfad und dessen Unterverzeichnisse gesendet
+
+- `**Max-Age**` definiert Lebensdauer des Cookies in Sekunden
+- Gibt die Lebensdauer relativ zum Setzen des Cookies an
+- `**Expires**` definiert einen spezifischen Zeitstempel zu dem das Cookie abläuft
+- Wenn beide Attribute gesetzt sind, unterstützen moderne Browser `**Max-Age**`
+- `**Max-Age**` und `**Expires**` werden nur bei persistenten Cookies gesetzt, nicht bei Session Cookies
+
+- `**HttpOnly**` verhindert den Zugriff auf das Cookie durch JavaScript
+
+- Bei gesetztem `**Secure**`-Attribut erfolgt die Übertragung an den Server nur über einer gesicherte Verbindung
+
+## 7.4 Cookies-Arten
+ - Session Cookies (Transient Cookies)
+    - Gültigkeit nur für die Dauer einer Websitzung
+    - Löschen von Session Cookies nach Beenden des Browsers
+    - Verwahrung im Hauptspeicher des Browsers
+    - Definition durch Weglassen der `**Expires**`- und `**Max-Age**`-Attribute
+- Persistent Cookies (Tracking Cookies)
+    - Dauerhafte Aufbewahrung durch Speicherung auf der Festplatte
+    - Definition durch Definition von `**Expires**` oder `**Max-Age**`
+- First-Party Cookies
+    - Cookies, welche durch HTTP-Antworten der aufgerufenen Domain gesetzt und an diese gesendet  werden
+- Third-Party Cookies
+    - Cookies von Drittanbieter
+    - Werden beim Abruf von Drittanbieterinhalten gesetzt, die in einer Webseite der First-Party eingebettet ist, z.B. per `**iframe**`-Element
+
+
+---
+3RD-PARTY-COOKIES
+
+![](image/Pasted%20image%2020250106122721.png)
+
+
+# 8 Referer UND Referrer-Policy
+
+![](image/Pasted%20image%2020250106123009.png)
+
+- Ein **_Referrer_** (**_Verweiser_**) 推荐人  bezeichnet eine Webseite von der eine andere Resource geladen wird
+- Das `**Referer**`_-Feld_ in der HTTP-Anfrage bezeichnet die Herkunft (Origin) der verweisenden Webseite und enthält optional Pfade und Query String der verweisenden Seite
+- Beachte: `**Referer**` ist ein immer noch angewandter Schreibfehler im Feldnamen
+- Die `**_Herkunft_**` (**_Origin_**) spezifiziert das Schema (HTTP oder HTTPS), den Hostnamen und den Port einer Ressource
+- Als **_Same-Origin-Request_** bezeichnet man eine Anfrage einer Webseite von Origin A an eine Resource von Origin A
+- Als **_Cross-Origin-Request_** bezeichnet man eine Anfrage einer Webseite von Origin A an eine Resource von Origin B 
+- Die `**Referrer-Policy**` spezifiziert in der Antwort der verweisenden Webseite die Bedingungen unter denen der Referrer in nachfolgenden Anfragen gesendet wird
+
+
+Referrer-Policies
+
+![](image/Pasted%20image%2020250106123319.png)
+
+
+## 8.1 Same Origin Policy 
+
+![](image/Pasted%20image%2020250106123549.png)
+
+- **_Same Origin Policy_** (**_Gleiche-Herkunft-Richtlinie_**) untersagt  不准,禁止 JavaScript und CSS auf Ressourcen zuzugreifen, die von einer anderen Herkunft (Origin) sind 
+- SOP unterbindet 不允许,禁止 , dass ein JavaScript-Programm einer Webseite eines Angreifers auf existierende Sitzungen eines Nutzers im Rahmen einer Webanwendung zugreifen kann, bei der Session Cookies verwendet werden
+- Problem: SOP kann durch alternative Angriffsszenarien wie Cross Site Scripting umgangen werden
+- Problem: SOP ist für viele Anwendungen zu restriktiv, da es oftmals gewünscht ist, Daten aus unterschiedlichen Origins in einer Webanwendung (Mashup) zu kombinieren 
+- Lösung: Cross Origin Resource Sharing
+
+
+
+## 8.2 Cross Origin Resource Sharing
+
+![](image/Pasted%20image%2020250106123842.png)
+
+
+- **_Cross-Origin Resource Sharing_** (**_CORS_**) ermöglicht JavaScript-Programmen das Absetzen von Cross-Origin Requests und den Empfang assoziierter Antworten 
+- `**Origin**` zeigt der Cross-Origin die Herkunft des JavaScript-Programms an
+- `**Access-Control-Allow-Origin**` zeigt dem Script an, ob der Zugriff auf die Ressource erlaubt ist
+- Hinweis: `**Access-Control-Allow-Origin: ***` gestattet den Zugriff durch Scripts beliebiger Origins
+- Weitere Konfigurationsmöglichkeiten durch zusätzliche `**Access-Control-***`-Felder
+- Beispiel: `**Access-Control-Allow-Method: GET**` erlaubt nur das Absetzen von `**GET**`-Anfragen
+- Preflight Requests sind Anfragen, die mittels `**OPTIONS**`-Methode gesendet werden um zu überprüfen, ob eine Anfrage erlaubt ist, jedoch ohne Daten zu senden
+
+
+
+
+# 9 Response Code/ Status Code 
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 https://www.semrush.com/blog/http-status-codes/
 
@@ -289,41 +500,8 @@ https://www.semrush.com/blog/http-status-codes/
     - 503 Service Unavailable: Server ist vorübergehend nicht verfügbar.
 
 
-# 8 Cookies 
 
-为什么需要 Cookies: HTTP GET/response interaction is stateless
-> Web sites and client browser use cookies to maintain some state between transactions
-
-
-Client-side state maintenance
-- Client stores small (?) state on behalf of server
-- Client sends state in future requests to the server
-Can provide authentication
-
-
-four components:
-1) cookie header line of HTTP response message
-2) cookie header line in next HTTP request message
-3) cookie file kept on user’s host, managed by user’s browser
-4) back-end database at Web site
-
-![](image/Pasted%20image%2020241021103143.png)
-
-
-What cookies can be used for: Cookies 的用途 
-▪ authorization
-▪ shopping carts
-▪ recommendations
-▪ user session state (Web e-mail)
-
-
-
-![](image/Pasted%20image%2020241031224142.png)
-
-
-
-
-# 9 Web Caches (Proxy Servers)
+# 10 Web Caches (Proxy Servers)
 
 browser sends all HTTP requests to cache
 - f object in cache: cache returns object to client
@@ -342,14 +520,14 @@ Cachce 中有  up-to-date cached version 就不需要再去  server 端找最新
 
 
 
-# 10 HTTP/HTTPS协议
+# 11 HTTP/HTTPS协议
 
 ![](image/Pasted%20image%2020240216165526.png)
 
 ![](image/Pasted%20image%2020240216170154.png)
 
 
-# 11 HTTP is Stateless
+# 12 HTTP is Stateless
 
 ![](image/Pasted%20image%2020241031223605.png)
 
@@ -382,9 +560,6 @@ Zustandslos bedeutet in diesem Fall, dass **der Server keine Informationen über
 对应的例子 
 Um Informationen, wie zum Beispiel einen Warenkorb, zu speichern, kann der Server den Warenkorb in einer Datenbank mit einer eindeutigen ID speichern. Wenn der Client also den ersten Artikel zum Warenkorb hinzufügt, kann der Server eine neue Bestellung in der Datenbank anlegen, und die entsprechende ID dem Client als Antwort zusenden. Möchte der Client nun den nächsten Artikel dem Warenkorb hinzufügen, muss er die entsprechende Warenkorb ID mit übergeben, damit der Server den Artikel der Bestellung in der Datenbank hinzufügen kann. Bei jedem weiteren Aufruf wird vom Client nun immer diese ID als Zusatzinformation mitübergeben, wodurch der Server den Warenkorb bestimmen kann.
 
-# 12 Port
-
-In TCP und UDP erlauben Ports die Zuordnung der eingehenden Datenpakete zur richtigen Applikation. Dadurch lassen sich mehrere Datenströme auf einem Host multiplexen.
 
 # 13 persistenten Verbindungen
 
