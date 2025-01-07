@@ -339,6 +339,60 @@ OpenFlow Controller 和 switcher 之间的联系
 
 ![](image/Pasted%20image%2020241120140809.png)
 
+
+## 9.6 SDN Mac Learning 
+
+> Challenge: Controller may miss events
+
+
+### 9.6.1 MAC learning process
+
+Principle : for packet ( src,dst ) arriving at port p
+- If dst unknown : broadcast packets to all ports
+    - Otherwise forward directly to known port
+- Also: if src unknown , switch learns : src is behind p
+
+1. h1 sends to h2: flood
+    1. ![](image/Pasted%20image%2020250106164008.png)
+2. h1 sends to h2: flood , learn (h1,p1)
+    1. dstmac =h1,fwd(1)
+3. h3 sends to h1: forward to p1
+    1. ![](image/Pasted%20image%2020250106164103.png)
+4.  h3 sends to h1: forward to p1, learn (h3,p3)
+    1. ![](image/Pasted%20image%2020250106164140.png)
+5. h1 sends to h3: forward to p3
+    1. ![](image/Pasted%20image%2020250106164158.png)
+
+
+### 9.6.2 How to implement this behavior (MAC-Learning process) in SDN
+
+![](image/Pasted%20image%2020250106164317.png)
+
+
+
+1. Initially table : Send everything to controller
+    1. ![](image/Pasted%20image%2020250106164401.png)
+2. When h1 sends to h2
+    1. Principle : only send to controller if destination unknown
+    2. ![](image/Pasted%20image%2020250106164441.png)
+    3. Controller learns that h1@p1, updates table , and floods
+        1. ![](image/Pasted%20image%2020250106164559.png)
+3. Now assume h2 sends to h1
+    1. Switch knows destination : message forwarded to h1
+    2. BUT : No controller interaction , does not learn about h2 : no new rule for h2
+        1. ![](image/Pasted%20image%2020250106164645.png)
+4. Now , when h3 sends to h2
+    1. Dest unknown : goes to controller which learns about h3. And then floods
+    2. ![](image/Pasted%20image%2020250106164755.png)
+5. Now , if h2 sends to h3 or h1
+    1. Destinations known : controller does not learn about h2
+    2. ![](image/Pasted%20image%2020250106164822.png)
+6. Ouch! Controller cannot learn about h2 anymore : whenever h2 is source , destination is known . (因为 h3 和 h1 都已经作为 已知的 dst 登录在表里面了)
+    2. All future requests to h2 will all be flooded : inefficient
+
+
+
+
 # 10 Internet Control Message Protocol
 
 
