@@ -424,6 +424,8 @@ HOTP/TOTP Calculation – Detailled View
 
 ![](image/Pasted%20image%2020250108110305.png)
 
+signed response with public key 
+
 
 
 ![](image/Pasted%20image%2020250108110433.png)
@@ -840,7 +842,7 @@ Use Cases
 **Uniqueness**
 - The biometric information used in the system must be able to differentiate one person from others
 
-**Collectability** (**Measurability**)
+**Collectability** (**Measurability**)  (how easy to capture it )
 - Relates to how difficult it is to obtain the required biometric data
 - Obtained data should be easy to extract, evaluate, and measure
 

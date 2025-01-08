@@ -1,0 +1,331 @@
+
+Multicast ( Reliable Multicast)
+Mobility
+Content Delivery Networks
+DNS Redirection
+MPLS
+
+# 1 Indirection
+
+Rather than reference an entity directly, reference it (“indirectly”) via another entity, which in turn can or will access the original entity
+
+Every problem in computer science can be solved by adding another level of indirection
+
+![](image/Pasted%20image%2020250108152657.png)
+
+
+We’ve seen indirection used in many ways:
+Multicast
+Mobility
+Content delivery networks
+
+What is the purpose of indirection on the Internet?
+- Sender does not need to know receiver id
+- Do not want sender to know intermediary identities
+- Load balancing
+- Transparency of indirection is important
+- Performance: Is it more efficient?
+
+
+# 2 Multicast ( Reliable Multicast)
+
+什么是 Multicast
+Multicast: One Sender, Many Receivers
+- Multicast: Act of sending datagram to multiple receivers with single “transmit” operation
+    - Analogy: One teacher to many students
+    - Question: How to achieve multicast?
+- Network multicast
+    - Router actively participate in multicast, making copies of
+    - packets as needed and forwarding towards multicast receivers
+![](image/Pasted%20image%2020250108153517.png)
+
+Multicast via Indirection: Why?
+- No need to individually address each member in the group
+    - Header savings
+- Looks like unicast
+    - Application interface is simple
+    - Single group
+- Abstraction
+    - Delegating the necessary implementation work to the routers
+- More scalable
+    - Senders don't manage the group
+    - New receivers must do the work to add themselves
+
+
+## 2.1 Multicast group concept
+
+Use of indirection
+- Host addresses IP datagram to multicast group
+- Routers forward multicast datagrams to hosts that have “joined” that multicast group
+![](image/Pasted%20image%2020250108153607.png)
+
+
+Multicast Groups
+- IPv4 addresses reserved for multicast:
+    - ![](image/Pasted%20image%2020250108153751.png)
+- Host group semantics
+    - Anyone can “join” (receive) multicast group
+    - Anyone can send to multicast group
+    - No network layer identification to hosts of members
+- Needed
+    - Infrastructure to deliver multicast addressed datagrams to all hosts that have joined that multicast group
+
+
+Joining a Multicast Group
+Two step process
+- Local: host informs local multicast router of desire to join group
+    - IGMP (Internet Group Management Protocol)
+    - membership_query is sent by host or router to all hosts in LAN to find all available groups (IGMP report)
+    - soft state : no reply upon queries, after some time state times out Silent leave possible
+- Wide area: local router interacts with other routers to receive multicast datagram flow
+    - Many protocols (routing algorithms on network layer, e.g., DVMRP, MOSPF, PIM)
+    - Two main approaches: one shared mcast tree for all senders (via coordinating center node, but how to find?) vs per sender mcast routing trees
+    - PIM: does dense mode mcast if group members dense, sparse mode if few routers take part (dense: forward on all ports until some router requests to stop, sparse: only forward on request)
+    - Cross provider solutions („BGP like“)...
+![](image/Pasted%20image%2020250108154035.png)
+
+## 2.2 Scalability: Feedback Implosion
+
+Scalability: Feedback Implosion
+, 过多的 ack回复到给 sender
+通过 Receiver vs. Sender Oriented RM来解决这个问题 
+
+![](image/Pasted%20image%2020250108155113.png)
+
+
+### 2.2.1 Reliable Multicast
+
+How to transfer data “reliably” from source(s) to R receivers.
+RM error and congestion control approaches have an analogy in human human communication
+
+Sender Oriented Reliable Mcast
+- Sender
+    - Multicasts all (re)transmissions
+    - Selective repeat
+    - Timers for loss detection
+    - ACK table
+    - Packet removed when all ACKs are in
+- Receiver
+    - ACKs received packets
+- Note: Group membership important
+![](image/Pasted%20image%2020250108154653.png)
+
+
+
+Receiver Oriented Reliable Mcast
+- Simplification
+- Sender
+    - Multicasts all (re)transmissions
+    - Selective repeat
+    - Responds to NAKs.  不发 ack 了, 执法 NAK
+    - When no longer buffer packets?
+- Receiver
+    - NAKs (unicast to sender) missing packets
+    - Timer to detect lost retransmission
+- Note: Easy to allow joins/leaves
+![](image/Pasted%20image%2020250108155014.png)
+
+
+
+Receiver oriented : shift recovery burden to receivers
+Loss detection “responsibility”
+Timers
+Scaling: Computational power grows as number of receivers grows
+Weaker notion of “group”
+Receivers can transparently choose different reliability semantics
+
+But …
+When does sender “release” data received by all?
+Heartbeat needed to detect lost last packets
+
+### 2.2.2 Scaling and Heterogeneity
+
+Issues
+- Avoid feedback implosion in reverse path
+- Avoid receiving unneeded data (retransmissions) in forward path
+- Recover data quickly
+- A void long repair times
+
+Techniques
+- Feedback suppression
+- Local recovery
+
+
+Feedback Suppression
+- Randomly delay NAKs (case for randomization) 就是 随机延迟 发送 nak 给 sendr 
+    - “Listen” to NAKs generated by others
+    - If no NAK for lost packets when timer expires
+    - Multicast NAK
+- Widely used in RM
+- Tradeoffs
+    - Reduces bandwidth
+    - Additional complexity at receivers (timers)
+![](image/Pasted%20image%2020250108155536.png)
+
+
+
+# 3 Mobility
+
+- Mobile node moves from network to network
+- Correspondents want to send packets to mobile node
+- Two approaches
+    - Indirect routing: Communication from correspondent to mobile goes through home agent, then forwarded to remote
+    - Direct routing: Correspondent gets foreign address of mobile, sends directly to mobile
+
+![](image/Pasted%20image%2020250108163111.png)
+
+![](image/Pasted%20image%2020250108163125.png)
+
+## 3.1 Mobility: Registration
+
+![](image/Pasted%20image%2020250108163309.png)
+
+
+
+## 3.2 Indirect Routing: 
+
+![](image/Pasted%20image%2020250108163322.png)
+
+- Mobile uses two addresses
+    - Permanent address: Used by correspondent (hence mobile location is transparent to correspondent)
+    - Care-of-address: Used by home agent to forward datagrams to mobile
+- Foreign agent functions may be done by mobile itself
+- Triangle routing
+    - Correspondent-home-network-mobile
+    - Inefficient when correspondent and mobile are in same network
+
+- Suppose mobile user moves to another network
+    - Registers with new foreign agent
+    - New foreign agent registers with home agent
+    - Home agent update care of address for mobile
+    - Packets continue to be forwarded to mobile (but with new care of address)
+- Mobility, changing foreign networks transparent:
+    - Ongoing connections can be maintained!
+
+## 3.3 Direct Routing
+
+![](image/Pasted%20image%2020250108163912.png)
+
+- Overcome triangle routing problem
+- Non transparent to correspondent
+    - Correspondent must get care of address from home agent
+    - What happens if mobile changes networks?
+
+Mobile IP: RFC 3220
+- Has many features we’ve seen:
+    - home agents, foreign agents, foreign agent registration, care of addresses, encapsulation (packet within a packet)
+- 3 components to standard:
+    - agent discovery
+    - registration with home agent
+    - indirect routing of datagrams
+
+## 3.4 Mobility via Indirection: Why Indirection
+
+- Transparency to correspondent
+- “Mostly” transparent to mobile
+    - Except that mobile must register with foreign agent
+    - Transparent to routers
+    - Transparent to rest of infrastructure
+    - Potential concerns if egress filtering is in place in origin networks
+    - Since source IP address of mobile is its home address: Spoofing?
+
+
+# 4 Content Delivery Networks
+
+- Use indirection via DNS
+- Content is…
+    - Static web pages and documents
+    - Images, videos, streaming, etc.
+- Content very important on Internet
+    - Much of web growth due to video
+        - YouTube, Netflix etc.
+- How to deliver content?
+- How to cope with growth of content?
+
+Why not serving content from one’s own site?
+- Enormous demand for popular content
+- Can not be served from single server
+- Bad performance
+    - Due to large distance: TCP throughput depends on RTT!
+- Bad connectivity?
+    - Single point of “failure”
+- High demand leads to crashes or high response times (e.g. flash crowds)
+    - High costs
+- Bandwidth and disk space to serve large volumes (e.g. videos)
+
+30 (out of ~30000) ASes contribute 30% of inter domain traffic
+CDNs originate at least 10% of all inter domain traffic
+Top ten origin ASes in terms of traffic
+![](image/Pasted%20image%2020250108165132.png)
+
+## 4.1 How do CDNs work? (Simplified)
+
+- Idea: Replicate content and serve it locally
+    - Offload content delivery to large number of content servers
+    - Put content servers near end users
+    - Consumer will download from closest location (“Edge Server”)
+- Task of CDNs is to serve content
+    - Static web content (Web pages, binaries, images…)
+    - Dynamic content:
+        - Break page into fragments
+        - Assemble on Akamai server
+        - Fetch only non cacheable content from origin website
+    - Applications: Audio and Video streaming
+
+![](image/Pasted%20image%2020250108165355.png)
+
+
+
+![](image/Pasted%20image%2020250108165421.png)
+
+
+![](image/Pasted%20image%2020250108165500.png)
+
+---
+
+DNS Redirection
+
+Some CDNs (especially Akamai) rely on DNS Redirection
+
+Example:
+Access of Apple webpage (www.apple.com)
+Pictures are hosted by CDN: images.apple.com
+Type “ dig images.apple.com” into your Linux shell
+
+
+![](image/Pasted%20image%2020250108165606.png)
+
+---
+
+Two-Level Server Assignment
+- CDN top level DNS server
+    - IP Anycast: One of the top level servers will answer
+    - Selects location of “best” content cluster
+    - Delegates to content cluster’s low level name server
+    - TTL adjusted dynamically
+- Low level server
+    - Return IP addresses of servers that can satisfy the request
+    - Consistent hashing
+    - TTL adjusted dynamically: quick adoption to load conditions
+- Some CDNs rely on Anycast to send traffic to closest content server (e.g., Limelight)
+
+
+What is the „Best“ location 
+- Depends on service requested
+    - Server must be able to satisfy the request
+    - E.g., Video stream
+- Server health
+    - Up and running without errors
+- Server load
+    - Server’s CPU, disk and network utilization
+- Network condition
+    - Minimal packet loss to client
+    - Sufficient bandwidth to handle requests
+- Client location
+    - Server should be close to client
+    - E.g. in terms of RTT
+
+# 5 MPLS
+
+
+

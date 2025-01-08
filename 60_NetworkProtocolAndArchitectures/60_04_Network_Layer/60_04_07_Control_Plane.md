@@ -146,7 +146,7 @@ backbone 中的 router 负责向 其他 as 中 发送数据源
 
 # 8 inter-AS routing: AS routing:  BGP (Border Gateway Protocol):
 
-BGP 高知别人 你这个 as 的存在 
+BGP 告知别人 你这个 as 的存在 
 
 BGP (Border Gateway Protocol): the de facto inter domain routing protocol
 • glue that holds the Internet
