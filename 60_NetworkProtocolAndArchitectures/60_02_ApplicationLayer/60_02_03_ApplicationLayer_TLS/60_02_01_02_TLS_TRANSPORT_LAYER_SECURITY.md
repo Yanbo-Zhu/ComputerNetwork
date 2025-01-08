@@ -1,7 +1,98 @@
 
+来自于 Digital Certifcate 这门课的课件 
+
+# 1 TLS Transport Layer Security (Securing TCP)
+
+TSL implemented in application layer , TLS 是在  application layer 这层实施的 TLS (Transport Layer Security): Secure TCP
+
+- widely deployed security protocol above the transport layer
+    - supported by almost all browsers, web servers: https (port 443)
+- provides:
+    - confidentiality: via symmetric encryption
+    - integrity: via cryptographic hashing
+    - authentication: via public key cryptography
+- history:
+    - early research, implementation: secure network programming, secure sockets
+    - secure socket layer (SSL) deprecated [2015]
+    - TLS 1.3: RFC 8846 [2018]
+
+![](image/Pasted%20image%2020241101202204.png)
 
 
-# 1 THE TCP HANDSHAKE
+![](image/Pasted%20image%2020241101202312.png)
+
+
+![](image/Pasted%20image%2020241101202345.png)
+
+
+
+# 2 Transport-layer security: what’s needed?
+
+let’s build a toy TLS protocol, t-tls, to see what’s needed!
+we’ve seen the “pieces” already:
+- handshake: Alice, Bob use their certificates, private keys to authenticate each other, exchange or create shared secret
+- key derivation: Alice, Bob use shared secret to derive set of keys
+- data transfer: stream data transfer: data as a series of records
+    - not just one-time transactions
+- connection closure: special messages to securely close connection
+
+---
+
+1 t-tls handshake phase:
+- Bob establishes TCP connection with Alice
+- Bob verifies that Alice is really Alice
+- Bob sends Alice a master secret key (MS), used to generate all other keys for TLS session
+- potential issues:
+• 3 RTT before client can start receiving data (including TCP handshake)
+![](image/Pasted%20image%2020250108200836.png)
+
+
+2 t-tls: cryptographic keys
+
+- considered bad to use same key for more than one cryptographic function
+    - different keys for message authentication code (MAC) and encryption
+- four keys:
+    - Kc : encryption key for data sent from client to server
+    - Mc : MAC key for data sent from client to server
+    - Ks : encryption key for data sent from server to client
+    - Ms : MAC key for data sent from server to client
+- keys derived from key derivation function (KDF)
+    - takes master secret and (possibly) some additional random data to create new keys
+
+
+3 t-tls: encrypting data
+- recall: TCP provides data byte stream abstraction
+- Q: can we encrypt data in-stream as written into TCP socket?
+    - A: where would MAC go? If at end, no message integrity until all data received and connection closed!
+    - solution: break stream in series of “records”
+        - each client-to-server record carries a MAC, created using Mc
+        - receiver can act on each record as it arrives
+- t-tls record encrypted using symmetric key, Kc, passed to TCP:
+
+![](image/Pasted%20image%2020250108201109.png)
+
+
+- possible attacks on data stream?
+    - re-ordering: man-in middle intercepts TCP segments and reorders (manipulating sequence `#s` in unencrypted TCP header)
+    - replay
+- solutions:
+    - use TLS sequence numbers (data, TLS-seq-# incorporated into MAC)
+    - use nonce
+
+4 t-tls:connection close
+- truncation attack:
+    - attacker forges TCP connection close segment
+    - one or both sides thinks there is less data than there actually is
+- solution: record types, with one type for closure
+    - type 0 for data; type 1 for close
+- MAC now computed using data, type, sequence `#`
+![](image/Pasted%20image%2020250108201810.png)
+
+
+
+
+
+# 3 TCP HANDSHAKE
 
 ![](image/Pasted%20image%2020241201001000.png)
 
@@ -15,7 +106,8 @@
 
 
 
-# 2 TLS Handshake 
+
+# 4 TLS Handshake 
 
 
 ![](image/Pasted%20image%2020241201001511.png)
@@ -29,10 +121,11 @@
 - Optionally: Server can send ClientHelloRetry
 
 
-# 3 TLS  BASICS
+# 5 TLS  BASICS
 
 
-TLS (Transport Layer Security) is a cryptographic protocol designed to provide secure communication over a network
+> TLS (Transport Layer Security) is a cryptographic protocol designed to provide secure communication over a network
+> TLS provides an API that any application can use
 
 Encryption: Ensures that data exchanged between parties is encrypted, preventing unauthorized access or eavesdropping
 Authentication: Verifies the identity of one or both parties (e.g., server authentication using certificates)
@@ -50,10 +143,11 @@ Data Integrity: Ensures that data has not been tampered with during transmission
     - Cryptographic computations etc. not focus of this lecture, just protocol
 
 
-## 3.1 TLS IN THE PROTOCL STACK
+## 5.1 TLS IN THE PROTOCL STACK
 
 ![](image/Pasted%20image%2020241201002002.png)
 
+![](image/Pasted%20image%2020250108202257.png)
 
 - TLS operates as a middle layer, primarily between TCP and the application layer
 - In combination with HTTP 1.1 it is optional, but in combination with HTTP/2 and HTTP/3 it is mandatory
@@ -63,7 +157,7 @@ Data Integrity: Ensures that data has not been tampered with during transmission
 - TLS 1.3 in combination with QUIC supports a faster handshake, especially with 0-RTT (Zero Round-Trip Time) connections
 
 
-## 3.2 TLS COMPONENTS
+## 5.2 TLS COMPONENTS
 
 ![](image/Pasted%20image%2020241201002246.png)
 
@@ -82,7 +176,7 @@ RECORD PROTOCOL
 - Decrypt incoming messages with the secret key
 - Verify the integrity and authenticity of the messages
 
-## 3.3 TLS Record Protocol and TLS Handshake Protocol 怎么一起工作的 
+## 5.3 TLS Record Protocol and TLS Handshake Protocol 怎么一起工作的 
 
 
 The TLS Record Protocol and the TLS Handshake Protocol are key components of the Transport Layer Security (TLS) protocol. They work together to establish and maintain a secure communication channel between two endpoints. Here's an overview:
@@ -141,7 +235,7 @@ Responsibilities:
     - Completes the handshake by finalizing parameters and enabling encrypted communication.
 
 
-# 4 TLS RECORD PROTOCOL
+# 6 TLS RECORD PROTOCOL
 
 - As soon as possible, all traffic will be encrypted
     - Depending on what mode is used (PSK or KE), starting mid handshake
@@ -160,7 +254,7 @@ Responsibilities:
 - The ==Message Authentication Code== (MAC) or Authentication Tag serves as a proof for the authenticity and integrity of the message
 
 
-## 4.1 WHAT ARE MESSAGE AUTHENTICATION CODES? (MAC)
+## 6.1 WHAT ARE MESSAGE AUTHENTICATION CODES? (MAC)
 
 Sender 端: 
 用 在 tls handshake 阶段 交换和计算所得的 secret key shared , 
@@ -184,7 +278,7 @@ Receiver 端:
 ![](image/Pasted%20image%2020241211112415.png)
 
 
-## 4.2 AUTHENTICATED ENCRYPTION WITH ASSOCIATED DATA (AEAD)
+## 6.2 AUTHENTICATED ENCRYPTION WITH ASSOCIATED DATA (AEAD)
 
 - Authentic Encryption with Associated Data (AEAD) is a cryptographic technique that combines encryption and authentication into a single, efficient operation
 - ==It ensures confidentiality, integrity, and authenticity in one step During encryption, it generates an Authentication Tag, which is automatically appended to the message==
@@ -195,14 +289,14 @@ Receiver 端:
 ![](image/Pasted%20image%2020241201004431.png)
 
 
-# 5 KEY AGREEMENT
+# 7 KEY AGREEMENT
 
 两方 如何 计算 secret key shared (shared key )
 
 常用的 key agreement 方法是 DH or ECDH 
 将自己的公钥交给对方, 然后用自己的私钥+对方的公钥 产生  secret key shared (shared key )
 
-## 5.1 KEY EXCHANGE
+## 7.1 KEY EXCHANGE
 
 已经有一个 Shared Secret 加密后 传给对方
 
@@ -216,7 +310,7 @@ Receiver 端:
 - The sender controls the key generation
 
 
-## 5.2 KEY AGREEMENT
+## 7.2 KEY AGREEMENT
 
 ![](image/Pasted%20image%2020241201004813.png)
 
@@ -231,7 +325,7 @@ Receiver 端:
 - Both parties have equal participation in key generation
 
 
-## 5.3 Algorithm 去establish shared secret key
+## 7.3 Algorithm 去establish shared secret key
 
 
 Multiple variants, but only three covered here
@@ -240,7 +334,7 @@ Multiple variants, but only three covered here
 - Ephemeral Diffie-Hellman (DHE): uses temporary (ephemeral) keys for every session and may be based on DH or ECDH
 
 
-### 5.3.1 FINITE SET DH
+### 7.3.1 FINITE SET DH
 
 Finite Set DH is based on the Discrete Logarithm Problem
 
@@ -252,7 +346,7 @@ Finite Set DH is based on the Discrete Logarithm Problem
 ![](image/Pasted%20image%2020241201010036.png)
 
 
-### 5.3.2 ELLIPTIC CURVE DH
+### 7.3.2 ELLIPTIC CURVE DH
 
 ECDH (Elliptic Curve Diffi e-Hellman) is based on Elliptic Curve Cryptography (ECC) and an equation of the form
 
@@ -263,7 +357,7 @@ ECDH (Elliptic Curve Diffi e-Hellman) is based on Elliptic Curve Cryptography (E
 
 
 
-### 5.3.3 ANONYMOUS DH
+### 7.3.3 ANONYMOUS DH
 
 Anonymous DH, as shown before, is vulnerable to a man-in-the-middle attack
 
@@ -273,7 +367,7 @@ An eavesdropper simply needs to intercept messages and pretend to be Bob towards
 
 ![](image/Pasted%20image%2020241211114644.png)
 
-### 5.3.4 AUTHENTICATED DH
+### 7.3.4 AUTHENTICATED DH
 
 Authenticated DH equips the two parties with both a private and a public key, thereby allowing Alice and Bob to sign their messages in order to stop the attacker from sending messages on their behalf
 
@@ -285,7 +379,7 @@ Authenticated DH equips the two parties with both a private and a public key, th
 ![](image/Pasted%20image%2020241211120608.png)
 
 
-# 6 TLS 1.2  HANDSHAKE
+# 8 TLS 1.2  HANDSHAKE
 
 ![](image/Pasted%20image%2020241211132353.png)
 
@@ -293,10 +387,23 @@ Authenticated DH equips the two parties with both a private and a public key, th
 
 
 
-## 6.1 FULL HANDSHAKE
+## 8.1 1-RTT HANDSHAKE
 
+1. client TLS hello msg:
+    1. guesses key agreement protocol, parameters
+    2. indicates cipher suites it supports
+2. server TLS hello msg chooses
+    1. key agreement protocol, parameters
+    2. cipher suite
+    3. server-signed certificate
+3. client:
+    1. checks server certificate
+    2. generates key
+    3. can now make application request (e.g.., HTTPS GET)
 
-### 6.1.1 Client Hello 
+![](image/Pasted%20image%2020250108202619.png)
+
+### 8.1.1 Client Hello 
 
 ![](image/Pasted%20image%2020241209005013.png)
 
@@ -329,7 +436,7 @@ Authenticated DH equips the two parties with both a private and a public key, th
 - The message is sent in plaintext and unsigned
 
 
-### 6.1.2 ServerHello 
+### 8.1.2 ServerHello 
 
 ![](image/Pasted%20image%2020241211111555.png)
 
@@ -352,7 +459,7 @@ Authenticated DH equips the two parties with both a private and a public key, th
 
 
 
-### 6.1.3 generate client and server-side handshake/application/finish keys through key derivation fucntion 
+### 8.1.3 generate client and server-side handshake/application/finish keys through key derivation fucntion 
 
 ![](image/Pasted%20image%2020241211121829.png)
 
@@ -362,7 +469,7 @@ Authenticated DH equips the two parties with both a private and a public key, th
 - The server sends an EncryptedExtension message with further details of the session
 - If the server wants to authenticate the client with a certificate, it sends a Certifi cateRequest message (optional)
 
-#### 6.1.3.1 KEY DERIVATION FUNCTION
+#### 8.1.3.1 KEY DERIVATION FUNCTION
 
 
 SIMPLISTIC VIEW
@@ -373,7 +480,7 @@ DETAILLED VIEW
 ![](image/Pasted%20image%2020241211122116.png)
 
 
-### 6.1.4 server sends its own certificate to client  and ServerFinished message 
+### 8.1.4 server sends its own certificate to client  and ServerFinished message 
 
 ![](image/Pasted%20image%2020241211122533.png)
 
@@ -399,7 +506,7 @@ ServerFinished
  Certificate and CertificateVerify can be omitted in some versions of the handshake
 
 
-### 6.1.5 server rqeust client certificate and client send ClientFinished Message  
+### 8.1.5 server rqeust client certificate and client send ClientFinished Message  
 
 这个交换过程和 server sends its own certificate to client  的过程类似 
 
@@ -410,12 +517,12 @@ ServerFinished
 - The exchange of application data, encrypted and decrypted with the application keys, starts
 
 
-## 6.2 Packet Formats
+## 8.2 Packet Formats
 
 ![](image/Pasted%20image%2020241210231133.png)
 
 
-## 6.3 Handshake –Extensions
+## 8.3 Handshake –Extensions
 
 - In each handshake packet, many extensions fields can be included to further negotiate properties of connection
 - Some properties will result in connection failure if the peer doesn't support them, others wont
@@ -427,7 +534,7 @@ ServerFinished
 
 ![](image/Pasted%20image%2020241210231248.png)
 
-## 6.4 Key exchange mode
+## 8.4 Key exchange mode
 
 - Client sends list of supported crypto suits/ elliptic curve groups
 - Client also sends required crypto bits for each group
@@ -435,22 +542,22 @@ ServerFinished
     - The server will then reply with HelloRetryRequest to allow the client to generate missing keying material
     - Useful for newer encryption schemes for which peer support is unknown and creating keying material is costly
 
-# 7 TLS 1.3 
+# 9 TLS 1.3 
 
 ![](image/Pasted%20image%2020241211132359.png)
 
 ![](image/Pasted%20image%2020241211132353.png)
 
-## 7.1 TLS 1.3 CONNECTION WITH OPENSSL
+## 9.1 TLS 1.3 CONNECTION WITH OPENSSL
 
 ![](image/Pasted%20image%2020241211125643.png)
 
 
-## 7.2 TLS1.3 通过 pre-shared key 和 0-RTT 优化 TLS 1.2的 handshake process 
+## 9.2 TLS1.3 通过 pre-shared key 和 0-RTT 优化 TLS 1.2的 handshake process 
 
 
 
-### 7.2.1 Abbreviated handshake WITH pre-shared key(PSK) RESUMPTION
+### 9.2.1 Abbreviated handshake WITH pre-shared key(PSK) RESUMPTION
 
 实现快速连接 
 
@@ -481,7 +588,7 @@ ServerFinished
 ![](image/Pasted%20image%2020241210231918.png)
 
 
-#### 7.2.1.1 **How PSK Resumption Works**
+#### 9.2.1.1 **How PSK Resumption Works**
 
 Pre-Shared Key (PSK) Setup
 - A shared secret is established during a previous session handshake.
@@ -503,7 +610,7 @@ Finished Messages
 - Both client and server exchange "Finished" messages to confirm the handshake.
 - Secure communication resumes immediately without requiring a full handshake.
 
-#### 7.2.1.2 Message Flow: Abbreviated PSK Handshake
+#### 9.2.1.2 Message Flow: Abbreviated PSK Handshake
 
 ClientHello:
     Includes the PSK identity and supported cipher suites.
@@ -517,9 +624,11 @@ Secure Data Transmission:
     Encrypted communication resumes using the new session keys.
 
 
-### 7.2.2 0-RTT HANDSHAKE
+### 9.2.2 0-RTT HANDSHAKE
 
 ![](image/Pasted%20image%2020241211131015.png)
+
+![](image/Pasted%20image%2020250108202721.png)
 
 - A 0-RTT (Zero Round-Trip Time) handshake allows a client to send data immediately after the ClientHello message without waiting for the server's response
 - It reduces latency, making connections faster, especially for applications requiring low delays, such as web browsing, APIs, and real-time communication
@@ -528,13 +637,18 @@ Secure Data Transmission:
 - Advantages: reduced latency and efficiency
 - Disadvantages: Risk of replay attacks and no forward secrecy
 
-
-## 7.3 TLS 1.3 CIPHER SUITES
+- initial hello message contains encrypted application data!
+    - “resuming” earlier connection between client and server
+    - application data encrypted using “resumption master secret” from earlier connection
+- vulnerable to replay attacks!
+    - maybe OK for get HTTP GET or client requests not modifying server state
+## 9.3 TLS 1.3 CIPHER SUITES
 
 ![](image/Pasted%20image%2020241211131415.png)
 
 
 - A cipher suite is a standardized set of algorithms used to secure communications in protocols like TLS
+- “cipher suite”: algorithms that can be used for key generation, encryption, MAC, digital signature
 - ==A cipher suite for TLS 1.2 defines==
     - the key agreement algorithm (RSA, DH, ECDHE), 
     - the authentication algorithm (RSA, ECDSA), 
@@ -543,10 +657,17 @@ Secure Data Transmission:
 - In TLS 1.3 the cipher suites are simplified and ==only specify the encryption algorithm and hash function==
 - TLS 1.3 only uses DHE and PSK as key agreement algorithms, while the required authentication algorithms depend on the used certificates
 
+- TLS: 1.3 (2018): more limited cipher suite choice than TLS 1.2 (2008)
+    - only 5 choices, rather than 37 choices
+    - requires Diffie-Hellman (DH) for key exchange, rather than DH or RSA
+    - combined encryption and authentication algorithm (“authenticated encryption”) for data rather than serial encryption, authentication
+        - 4 based on AES\
+    - HMAC uses SHA (256 or 284) cryptographic hash function
+
 ![](image/Pasted%20image%2020241211131948.png)
 
 
-# 8 不同 TLS 1.2 vs 1.3 vs Quic 
+# 10 不同 TLS 1.2 vs 1.3 vs Quic 
 
 
 
