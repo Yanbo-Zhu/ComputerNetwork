@@ -35,6 +35,8 @@ Remote controller computes, installs forwarding tables in routers
 ![](image/Pasted%20image%2020241112195502.png)
 
 
+
+
 # 3 Routing table 
 
 ![](image/Pasted%20image%2020241220161830.png)
@@ -72,8 +74,74 @@ Matching Process
 3. The longest matching prefix is `192.168.1.0/24` (24 bits), so the packet is forwarded to **Router B**.
 
 
+# 5 Routing: Basic
 
-# 5 Routing protocols
+- Routing: Mechanism to decide which path to use to transmit packets through a network
+- Intradomain: within a routing domain (= within one administrative domain), algorithms usually find shortest paths, but scalability is limited to smaller networks, two popular variants:
+    - Link-State: every router has full topology information of the entire routing domain, every router independently calculates shortest paths to all other routers (actually to all networks) using, e.g., the Dijkstra algorithm, example: OSPF
+    - Distance vector: every router only knows its direct neighbors and the destinations that can be reached via this neighbor, shortest paths are distributed using, e.g., the Bellman-Ford algorithm, example: RIP
+- Interdomain: between multiple routing domains
+    -  Exchanges routing information may include entire paths, rules and filters decide which paths to use, example: BGP
+
+
+- Unicast routing (point to point)
+    - Proactive: routing information is exchanged and updated proactively, routing tables can immediately be used for data exchange -> we concentrate on this
+    - Reactive: routing information is established only when data is ready for transmission
+- Multicast routing (point to multipoint)
+    - Efficient forwarding to multiple receivers
+    - Extension to unicast routing
+- Ad hoc routing
+    - Dynamic network topology
+    - Routing information can get outdated quickly
+- Data centric routing
+    - Routing based on content rather than destination address
+    - Example: named data networking (NDN)
+
+
+
+
+# 6 Routing: Graphs
+
+
+Graph abstraction: link costs
+
+![](image/Pasted%20image%2020241112195851.png)
+
+Graphs are often used as an abstraction for networks
+Allows the use of search algorithms from graph theory
+Basic terminology:
+![](image/Pasted%20image%2020250109224814.png)
+
+Example of an undirected graph
+- N = {A, B, C, D, E, F}
+- E = {(A,B), (A,C), (A,D), (B,A), (B,C), (B,D), (C,A), (C,B), (C,D), (C,E), (C,F), (D,A), (D,B), (D,C), (D,E), (E,C), (E,D), (E,F), (F,C), (F,E)}
+- c(A,B) = c(B,A) = 2, c(A,C) = c(C,A) = 5, ...
+- ![](image/Pasted%20image%2020250109224900.png)
+
+Some more terminology
+- v 代表 某个 node 
+- A path is a sequence (v1,v2,..., vn), so that all pairs (v1,v2), (v2,v3),..., (vn-1,vn)  属于 E
+- The cost of a path is the sum of all edge costs c(v1,v2)+c(v2,v3)+..+c(vn-1,vn), it is called distance D(v1,vn )
+- A path between two nodes v1 and v2 is called a shortest path, if there is no other path between both nodes with smaller cost (please note, there might be multiple shortest paths with the same cost)
+- A cycle is a path where start node = end node
+- A graph is connected, if there is a path between every pair of nodes
+
+- A tree is connected graph that has no cycles
+- A spanning tree of a graph G = (N,E) is a tree B = (N,E´) mit E´ belongs to  E
+- A minimal spanning tree of a graph G for a node v is a spanning tree of G, that contains the shortest path between v and every other node in G
+![](image/Pasted%20image%2020250109225122.png)
+
+Properties of shortest paths
+- If v is part of a shortest path between x and y, then the shortest path from x to
+- y can be constructed from the shortest paths between x and v and v and y
+    - ![](image/Pasted%20image%2020250109225227.png)
+- Recursion scheme: D(x,y) = minv{D(x,v) + D(v,y)}
+- This is the fundamental basis for shortest path algorithms
+
+
+
+
+# 7 Routing protocols
 
 Routing protocol goal: determine “good” paths (equivalently, routes), from sending hosts to receiving host, through network of routers 
 
@@ -87,22 +155,20 @@ routing: a “top 10” networking challenge!
 
 
 ---
-Graph abstraction: link costs
-
-![](image/Pasted%20image%2020241112195851.png)
-
----
 Routing algorithm classification
+
+- Link-State: every router has full topology information of the entire routing domain, every router independently calculates shortest paths to all other routers (actually to all networks) using, e.g., the Dijkstra algorithm, example: OSPF
+- Distance vector: every router only knows its direct neighbors and the destinations that can be reached via this neighbor, shortest paths are distributed using, e.g., the Bellman-Ford algorithm, example: RIP
 
 ![](image/Pasted%20image%2020241112195909.png)
 
 
-## 5.1 link state
+## 7.1 link state
 
 ![](image/Pasted%20image%2020241112200118.png)
 
 
-## 5.2 distance vector
+## 7.2 distance vector
 
 ![](image/Pasted%20image%2020241112200336.png)
 
@@ -110,7 +176,7 @@ Routing algorithm classification
 
 
 
-## 5.3 Comparison of LS and DV algorithms
+## 7.3 Comparison of LS and DV algorithms
 
 ![](image/Pasted%20image%2020241112200427.png)
 
@@ -119,7 +185,7 @@ Routing algorithm classification
 
 
 
-# 6 Internet approach to scalable routing
+# 8 Internet approach to scalable routing
 
 
 aggregate router into Region / Autonomous system AS
@@ -129,7 +195,7 @@ aggregate router into Region / Autonomous system AS
 forwarding table 
 ![](image/Pasted%20image%2020241119224450.png)
 
-# 7 intra-AS routing: OSPF (Open Shortest Path First )
+# 9 intra-AS routing: OSPF (Open Shortest Path First )
 
 
 OSPF: Open Shortest Path First 
@@ -144,7 +210,7 @@ Hierarchical OSPF
 
 backbone 中的 router 负责向 其他 as 中 发送数据源 
 
-# 8 inter-AS routing: AS routing:  BGP (Border Gateway Protocol):
+# 10 inter-AS routing: AS routing:  BGP (Border Gateway Protocol):
 
 BGP 告知别人 你这个 as 的存在 
 
@@ -170,7 +236,7 @@ BGP provides each AS a means to:
 ![](image/Pasted%20image%2020241120093748.png)
 
 
-## 8.1 BGP path advertisement
+## 10.1 BGP path advertisement
 
 从 AS 3 发送 X 到 AS1 
 ![](image/Pasted%20image%2020241120093616.png)
@@ -186,7 +252,7 @@ BGP provides each AS a means to:
 ![](image/Pasted%20image%2020241120094500.png)
 
 
-## 8.2 Why different Intra--, Inter AS routing
+## 10.2 Why different Intra--, Inter AS routing
 
 policy:
 inter AS: admin wants control over how its traffic routed, who routes through its network
@@ -200,7 +266,7 @@ intra AS: can focus on performance
 inter AS: policy dominates over performance
 
 
-## 8.3 Hot potato routing
+## 10.3 Hot potato routing
 
 ![](image/Pasted%20image%2020241120094835.png)
 
@@ -209,7 +275,7 @@ inter AS: policy dominates over performance
 
 2d 想要到达 as3 , 明显 走 2c 更近. 但是还是选择了 2a, 因为 他短视, 到 2a 的 link-cost 更低 , 相比于2c 
 
-## 8.4 BGP: achieving policy via advertisements
+## 10.4 BGP: achieving policy via advertisements
 
 provider network 更加优先选用自己的 customer network 而不是别人的 
 B choosees not to advertise BAw to C, either BxC 
@@ -221,7 +287,7 @@ B choosees not to advertise BAw to C, either BxC
 
 
 
-## 8.5 BGP route selection
+## 10.5 BGP route selection
 优先级最上的 最优先被使用
 
 router may learn about more than one route to destination
@@ -231,7 +297,7 @@ AS, selects route based on:
 3. closest NEXT HOP router: hot potato routing
 4. 4.additional criteria
 
-# 9 Software defined networking (SDN) control plane
+# 11 Software defined networking (SDN) control plane
 
 
 旧的方式  Per-router control plane  
@@ -246,7 +312,7 @@ Individual routing algorithm components in each and every router interact in the
 ![](image/Pasted%20image%2020241120124845.png)
 
 
-## 9.1 (SDN) control plane 的优点和缺点
+## 11.1 (SDN) control plane 的优点和缺点
 
 
 优点 
@@ -264,7 +330,7 @@ controller) congestion levels
 
 
 
-## 9.2 Traffic engineering: difficult with traditional routing
+## 11.2 Traffic engineering: difficult with traditional routing
 
 
 有点时候 需要重新定义 link weights 
@@ -278,7 +344,7 @@ controller) congestion levels
 
 
 
-## 9.3 Software defined networking (SDN) architecture 
+## 11.3 Software defined networking (SDN) architecture 
 
 
 ![](image/Pasted%20image%2020241120125835.png)
@@ -298,7 +364,7 @@ controller) congestion levels
 
 ![](image/Pasted%20image%2020241120132156.png)
 
-## 9.4 OpenFlow protocol
+## 11.4 OpenFlow protocol
 
 OpenFlow Controller 和 switcher 之间的联系 
 
@@ -316,7 +382,7 @@ OpenFlow Controller 和 switcher 之间的联系
 ![](image/Pasted%20image%2020241120132541.png)
 
 
-### 9.4.1 一个例子
+### 11.4.1 一个例子
 
 当switcher 之间在传输包裹的时候遇到link failure ,  switcher 将包裹的控制权交给 controller . controller通过 更上层的centric的routing 算法 updated link status info. 
 然后  在这个switcher 中安装新的 flow table, 告诉 switcher 该将这个 package 发给那个 switcher 的那个 port
@@ -329,23 +395,23 @@ OpenFlow Controller 和 switcher 之间的联系
 
 
 
-## 9.5 SDN implementation
+## 11.5 SDN implementation
 
-### 9.5.1 OpenDaylight (ODL) controller
+### 11.5.1 OpenDaylight (ODL) controller
 
 ![](image/Pasted%20image%2020241120140756.png)
 
-### 9.5.2 ONOS controller
+### 11.5.2 ONOS controller
 
 ![](image/Pasted%20image%2020241120140809.png)
 
 
-## 9.6 SDN Mac Learning 
+## 11.6 SDN Mac Learning 
 
 > Challenge: Controller may miss events
 
 
-### 9.6.1 MAC learning process
+### 11.6.1 MAC learning process
 
 Principle : for packet ( src,dst ) arriving at port p
 - If dst unknown : broadcast packets to all ports
@@ -364,7 +430,7 @@ Principle : for packet ( src,dst ) arriving at port p
     1. ![](image/Pasted%20image%2020250106164158.png)
 
 
-### 9.6.2 How to implement this behavior (MAC-Learning process) in SDN
+### 11.6.2 How to implement this behavior (MAC-Learning process) in SDN
 
 ![](image/Pasted%20image%2020250106164317.png)
 
@@ -393,7 +459,7 @@ Principle : for packet ( src,dst ) arriving at port p
 
 
 
-# 10 Internet Control Message Protocol
+# 12 Internet Control Message Protocol
 
 
 ![](image/Pasted%20image%2020241120134830.png)
@@ -403,7 +469,7 @@ Principle : for packet ( src,dst ) arriving at port p
 ![](image/Pasted%20image%2020241120134850.png)
 
 
-# 11 network management and configuration
+# 13 network management and configuration
 
 Device, hardware的管理h和配置更新 
 
@@ -414,7 +480,7 @@ Network management includes the deployment, integration and coordination of the 
 
 ![](image/Pasted%20image%2020241120135314.png)
 
-## 11.1 SNMP (Simple Network Management Protocol)
+## 13.1 SNMP (Simple Network Management Protocol)
 
 Operator queries/sets devices data (MIB) using Simple Network Management Protocol (SNMP)
 
@@ -432,14 +498,14 @@ Operator queries/sets devices data (MIB) using Simple Network Management Protoco
 
 
 
-## 11.2 NETCONF/YANG
+## 13.2 NETCONF/YANG
 
 - more abstract, network wide, holistic
 - emphasis on multi device configuration management.
 - YANG: data modeling language
 - NETCONF: communicate YANG compatible actions/data to/from/among remote devices
 
-### 11.2.1 NETCONF
+### 13.2.1 NETCONF
 
 ![](image/Pasted%20image%2020241120135757.png)
 
@@ -450,7 +516,7 @@ Operator queries/sets devices data (MIB) using Simple Network Management Protoco
 
 ![](image/Pasted%20image%2020241120140045.png)
 
-### 11.2.2 YANG
+### 13.2.2 YANG
 
 ==data modeling language used to specify structure, syntax, semantics of NETCONF network management data==
 

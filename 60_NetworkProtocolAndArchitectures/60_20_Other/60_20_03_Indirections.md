@@ -87,7 +87,9 @@ Two step process
 ## 2.2 Scalability: Feedback Implosion
 
 Scalability: Feedback Implosion
-, 过多的 ack回复到给 sender
+问题:  过多的 ack回复到给 sender
+
+解决方式 aggregated ack 
 通过 Receiver vs. Sender Oriented RM来解决这个问题 
 
 ![](image/Pasted%20image%2020250108155113.png)

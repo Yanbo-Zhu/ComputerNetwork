@@ -16,8 +16,8 @@
     - FTP: Dedicated control connection: “Out of Band Signaling”
 
 
-In Band Signaling 就是 control data 和 message data 会在一起
-Out of Band Signaling 就是 control data 在单独的Dedicated control connection 中运输 
+In Band Signaling 就是 control data 和 message data 会在一起, in the same  TCP connection 
+Out of Band Signaling 就是 control data 在单独的Dedicated control connection 中运输 , seoarated control and data connections 
 
 ## 1.1 HTTP: In Band Signaling
 
