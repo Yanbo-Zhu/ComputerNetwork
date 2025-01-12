@@ -217,7 +217,7 @@ Calculation of the routing table
     - N´ is initialized with the start node u
     - In every iteration, the neighbor node v is added, that has the lowest path cost from nodes in N´ and the edge to v has the shortest path: D(u,v) = minw in N'{D(u,w) + c(w,v)}
     - this is a specialization of the general recursion scheme D(u,v) = minw{D(u,w) + D(w,v)}, where the second part is an edge rather than a path
-    - The algorithm terminates if N = N´
+    - The algorithm terminates if N = N´   ==N 是 neighbors ==
 
 ![](image/Pasted%20image%2020250112174726.png)
 
@@ -231,14 +231,21 @@ Calculation of the routing table
         - unlimited else
     - Distance D(v) summarizes costs of the currently known shortest path from u to v
     - p(v) denotes the predecessor of v on the currently known shortest path from u to v
+        - u -> p(v) -> v 
 
 - Initialization
     - N´= {u};
-    - For all vÎN: D(v)=c(u,v);
+    - For all vÎN: D(v)=c(u,v);    u 到 v 的 cost / distance 
 
 - Repeat until N´= N
     - ![](image/Pasted%20image%2020250112175621.png)
+    - D(v) = D(w) + c(w,v) .  u -> w -> v , 走 w 更近 
 
+---
+
+表中的数据 字都是 a 到 x 的距离 
+
+a 到 c via a 
 
 ![](image/Pasted%20image%2020250112180055.png)
 
