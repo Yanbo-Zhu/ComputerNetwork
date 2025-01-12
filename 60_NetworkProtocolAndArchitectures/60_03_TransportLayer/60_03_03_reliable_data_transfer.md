@@ -147,11 +147,41 @@ Approach: sender waits “reasonable” amount of time for ACK
 # 6 Go-Back-N 
 
 
+The Go-Back-N protocol is an Automatic Repeat Request (ARQ) protocol used in networking to ensure reliable data transmission. It is part of the sliding window protocols family, enabling efficient data transfer while incorporating error control mechanisms.
+
+How the Go-Back-N Protocol Works
+1. **Window Size (Sliding Window):**
+    - The sender maintains a **sending window** of up to NNN packets. This means the sender can transmit up to NNN unacknowledged packets simultaneously.
+    - Typically, the receiver has a receiving window of size 1, meaning it processes packets strictly in order.
+2. **Transmission:**
+    - The sender transmits packets consecutively without waiting for an acknowledgment (**ACK**) for each packet, as long as the number of unacknowledged packets is within the window size (≤N\leq N≤N).
+3. **Error Detection:**
+    - If the receiver detects a corrupted packet (using checksums) or receives a packet out of order, it discards the faulty or out-of-sequence packet and may send a **negative acknowledgment (NAK)** or repeat the last correct **ACK**.
+4. **Error Recovery:**
+    - Upon detecting a missing or corrupted packet (or after a timeout), the sender retransmits the **last acknowledged packet** and all subsequent packets, effectively "going back NNN" packets.
+
+Key Features of Go-Back-N
+- **Efficiency:** Allows continuous transmission of multiple packets before receiving individual ACKs, improving throughput in reliable networks.
+- **Drawback:** In the event of an error, it retransmits all packets from the last acknowledged one, which may lead to inefficiencies in networks with high latency or low error rates.
+
+
+Example
+- **Sender:** Sends packets P1,P2,P3,P4,…P1, P2, P3, P4, \dotsP1,P2,P3,P4,… up to NNN.
+- **Receiver:** Acknowledges P1,P2P1, P2P1,P2. If P3P3P3 is corrupted, it discards P3P3P3 and all subsequent packets, sending an ACK for P2P2P2.
+- **Sender:** Upon receiving the ACK for P2P2P2, retransmits P3,P4,…P3, P4, \dotsP3,P4,….
+
+This approach ensures data integrity while balancing efficiency with error correction.
+
+
+## 6.1 Sender 
+
+
 ![](image/Pasted%20image%2020241208174144.png)
 
 ![](image/Pasted%20image%2020241208182950.png)
 
----
+
+## 6.2 receiver 
 
 
 ![](image/Pasted%20image%2020241208174226.png)
@@ -159,8 +189,8 @@ Approach: sender waits “reasonable” amount of time for ACK
 ![](image/Pasted%20image%2020241208183003.png)
 
 
+## 6.3 Go-Back-N in action 
 
----
 
 从 highest highest in-order seq 的 已经 acknowledged 的 pakcage 的下一个重发, 一面的全部重发, 不管 用没有接受成功 
 

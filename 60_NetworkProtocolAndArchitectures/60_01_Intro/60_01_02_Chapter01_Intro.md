@@ -106,17 +106,17 @@ Head-of-the-Line (HOL) Blocking
 ![](image/Pasted%20image%2020250109222919.png)
 
 
-# Routing
+# 4 Routing
 
 见 60_04_07_Control_Plane 中
 
-# 4 Packet Loss
+# 5 Packet Loss
 
 ![](image/Pasted%20image%2020241021065534.png)
 
 
 ![](image/Pasted%20image%2020241021065634.png)
-# 5 Packet delay 
+# 6 Packet delay 
 
 ![](image/Pasted%20image%2020241021065557.png)
 
@@ -125,7 +125,7 @@ Head-of-the-Line (HOL) Blocking
 
 
 
-# 6 Throughput 
+# 7 Throughput 
 
 throughput: rate (bits/time unit) at which bits are being sent from sender to receiver
 • instantaneous: rate at given point in time rate over longer period of time
@@ -133,7 +133,7 @@ throughput: rate (bits/time unit) at which bits are being sent from sender to re
 
 ![](image/Pasted%20image%2020241021065744.png)
 
-# 7 Internet protocol stack 
+# 8 Internet protocol stack 
 
 
 ![](image/Pasted%20image%2020241021070030.png)

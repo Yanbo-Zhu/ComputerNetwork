@@ -98,8 +98,6 @@ Matching Process
     - Example: named data networking (NDN)
 
 
-
-
 # 6 Routing: Graphs
 
 
@@ -112,11 +110,15 @@ Allows the use of search algorithms from graph theory
 Basic terminology:
 ![](image/Pasted%20image%2020250109224814.png)
 
+
+
 Example of an undirected graph
 - N = {A, B, C, D, E, F}
 - E = {(A,B), (A,C), (A,D), (B,A), (B,C), (B,D), (C,A), (C,B), (C,D), (C,E), (C,F), (D,A), (D,B), (D,C), (D,E), (E,C), (E,D), (E,F), (F,C), (F,E)}
 - c(A,B) = c(B,A) = 2, c(A,C) = c(C,A) = 5, ...
 - ![](image/Pasted%20image%2020250109224900.png)
+
+
 
 Some more terminology
 - v 代表 某个 node 
@@ -130,6 +132,9 @@ Some more terminology
 - A spanning tree of a graph G = (N,E) is a tree B = (N,E´) mit E´ belongs to  E
 - A minimal spanning tree of a graph G for a node v is a spanning tree of G, that contains the shortest path between v and every other node in G
 ![](image/Pasted%20image%2020250109225122.png)
+
+
+
 
 Properties of shortest paths
 - If v is part of a shortest path between x and y, then the shortest path from x to
@@ -163,23 +168,204 @@ Routing algorithm classification
 ![](image/Pasted%20image%2020241112195909.png)
 
 
-## 7.1 link state
+## 7.1 link state routing 
+
+
+- All nodes have full knowledge of network topology
+- This is achieved by flooding link state advertisements
+- Every node calculates the shortest path to all other nodes using the Dijkstra algorithm
+- If the topology changes (this can be identified by the underlying data link layer), changes are flooded again followed by a re-calculation of shortest paths
+
+---
+
+LSA Flooding
+- Flooding of Link-State-Advertisements (LSA) containing
+    - ID of the node that created the LSA
+    - All direct neighbors (IDs and path (=link) cost to the neighbor)
+    - Sequence number
+    - Time to live
+- Every node creates LSA containing all direct neighbors and sends it to all neighbors
+- Received LSAs are first processed to update local topology information and then forwarded to all neighbors except the one from which it was received => flooding
+- To improve reliability, acknowledgements and retransmissions are used in combination with sequence numbers and time to live field
+
+
+### 7.1.1 Example LSA Flooding
+
+- initial LSA creation and distribution to neighbors
+    - ![](image/Pasted%20image%2020250112174320.png)
+- received LSAs are used to update link states; LSAs are forwarded to all neighbors
+    - ![](image/Pasted%20image%2020250112174425.png)
+- final update of link state information
+    - ![](image/Pasted%20image%2020250112174446.png)
+
+
+
+
+### 7.1.2 Dijkstra Algorithm
+
 
 ![](image/Pasted%20image%2020241112200118.png)
 
+Calculation of the routing table
+- Routing table contains an entry for every destination node v including the next hop on the shortest path
+- How to derive the next hop node from vector p(v) with predecessors?
+- Recursive function: nexthop(v) = if p(v)=u then v else nexthop(p(v))
+
+- Main idea
+    - Iteratively calculate the minimal spanning tree
+    - The set of nodes N´ contains all nodes, to which shortest paths are already known
+    - N´ is initialized with the start node u
+    - In every iteration, the neighbor node v is added, that has the lowest path cost from nodes in N´ and the edge to v has the shortest path: D(u,v) = minw in N'{D(u,w) + c(w,v)}
+    - this is a specialization of the general recursion scheme D(u,v) = minw{D(u,w) + D(w,v)}, where the second part is an edge rather than a path
+    - The algorithm terminates if N = N´
+
+![](image/Pasted%20image%2020250112174726.png)
+
+
+- Used data structures
+    - Set of nodes N, start node u
+    - N´ is the set of nodes to which shortest paths from u are known already
+    - Costs c(v,w) between nodes v and w
+        - Positive costs, if v and w are neighbors
+        - 0 if v = w
+        - unlimited else
+    - Distance D(v) summarizes costs of the currently known shortest path from u to v
+    - p(v) denotes the predecessor of v on the currently known shortest path from u to v
+
+- Initialization
+    - N´= {u};
+    - For all vÎN: D(v)=c(u,v);
+
+- Repeat until N´= N
+    - ![](image/Pasted%20image%2020250112175621.png)
+
+
+![](image/Pasted%20image%2020250112180055.png)
+
+
+### 7.1.3 Forward Search Algorithm
+
+- More practical approach to the Dijkstra algorithm
+    - Every node collects LSAs and directly calculates routing table
+    - Most popular version: Forward-Search-Algorithmus
+    - All entries are stores in the form (destination, costs, next hop) within two separate lists
+        - Acknowledged list (similar to N´)
+        - Tentative (temporarary) list (similar to all neighbors from nodes in N´)
+    - nexthop(v) is the next node to reach a node v from the start node u
+    - Values for c(w,v) can directly be read from the LSAs
+    - Values for D(w) and nexthop(w) are stored in the two lists
+- Initialization
+    - acknowledgedList = <(u,0,-)>, tentativeList = <>;
+- Repeat
+    - ![](image/Pasted%20image%2020250112180641.png)
+- Until tentativeList is empty
+
+(c,4,d) , from a, to c , through d , the total cost from a to c  ist 4
+
+![](image/Pasted%20image%2020250112180748.png)
 
 ## 7.2 distance vector
 
 ![](image/Pasted%20image%2020241112200336.png)
 
 
+### 7.2.1 Bellman Ford Algorithm
+
+- Distributed shortest path search:
+    - Every node tells its direct neighbors which other nodes can be reached at which cost (distance)
+    - Initialization: only information about direct neighbors, with every exchange, paths to more nodes are learned and updated to converge to shortest paths
+    - Makes use of property of shortest paths: D(u,v) = minw{D(u,w) + D(w,v)}
+    - Here, for the first part just a single edge is used: D(u,v) = minw{c(u,w) + D(w,v)}
+    - Whenever a new shortest path to a destination has been found, this is distributed again to all neighbors
+    - Algorithm terminates, if no changes are made after receiving an update (the routing algorithm converges)
+
+![](image/Pasted%20image%2020250112182155.png)
+
+![](image/Pasted%20image%2020250112181922.png)
 
 
+![](image/Pasted%20image%2020250112181930.png)
 
+
+---
+
+Example 
+
+![](image/Pasted%20image%2020250112182007.png)
+
+nh 为 经过 那个node, 到达 destination node 
+
+![](image/Pasted%20image%2020250112182016.png)
+
+![](image/Pasted%20image%2020250112182309.png)
+
+![](image/Pasted%20image%2020250112182339.png)
+
+![](image/Pasted%20image%2020250112182441.png)
+
+
+### 7.2.2 Distance Vector Routing
+
+Behavior in case of topology changes
+- The Bellman Ford algorithm also works in case of topology changes (就是 d to c 的 cost 从 3 变为 1, 之后 整个 Distance Vector table 数值应该怎么更新  )
+- If connection costs are getting smaller, the algorithm converges quickly: good news travel fast
+- If connection costs are increasing, cycles may appear temporarily, and it may take some time to convergence: bad news travel slowly
+
+![](image/Pasted%20image%2020250112182007.png)
+
+![](image/Pasted%20image%2020250112182735.png)
+
+![](image/Pasted%20image%2020250112182743.png)
+
+![](image/Pasted%20image%2020250112182753.png)
+
+
+### 7.2.3 Infinity Problem
+
+
+- Outdated information in distributed routing tables may contain a cyclic path
+- The slow iteration only ends, when the costs of the alternate path have been reached
+- Solutions
+    - Limit maximum costs (e.g., 16)  就是 避免新的 edge cost 过于大, 因为 infinite iterative incresment 
+    - Poisoned reverse: if the shortest path from u to v goes via next hop w, u sends to w the infinite cost for the distance from u to v
+    - Poisoned reverse may avoid cycles of length 3 but not larger cycles. 
+
+---
+
+example 
+
+![](image/Pasted%20image%2020250112182844.png)
+
+
+- 因为这时候 c 表中 c 到 a 的 cost 为 5, 还没有更新, 所以 b 表中 b to a via c 的 new cost 为 5+1 = 6 
+![](image/Pasted%20image%2020250112182849.png)
+
+![](image/Pasted%20image%2020250112183117.png)
+
+![](image/Pasted%20image%2020250112183126.png)
+
+- 缓步上升到 50 
+![](image/Pasted%20image%2020250112183132.png)
 ## 7.3 Comparison of LS and DV algorithms
 
-![](image/Pasted%20image%2020241112200427.png)
 
+Link State Routing
+- Centralized
+- Complexity of Dijkstra algorithm is O( $n^2$) for n nodes
+- Efficient implementations achieve O(n log n)
+- Scalability limited
+- Message overhead: O(ne) for n nodes and e edges
+- Robustness: does not tolerate faulty / malicious information 
+- Dynamic metrics may lead to instability (thus not used)
+
+Distance Vector Routing
+- Distributed
+- Convergence problems in case of cycles
+- Scalability limited
+- Robustness: error propagation if faulty / malicious information is provided
+- Dynamic metrics not supported
+
+![](image/Pasted%20image%2020241112200427.png)
 
 
 
