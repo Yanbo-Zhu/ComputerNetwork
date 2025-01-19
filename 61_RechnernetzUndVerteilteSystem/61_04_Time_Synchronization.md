@@ -54,15 +54,6 @@ The Berkeley Algorithm
 
 
 
-
-
-
-
-
-
-
-
-
 # 3 Network Time Protocol (NTP) 
 
 - Time synchronization system for computer clocks through the Internet – most widely used,

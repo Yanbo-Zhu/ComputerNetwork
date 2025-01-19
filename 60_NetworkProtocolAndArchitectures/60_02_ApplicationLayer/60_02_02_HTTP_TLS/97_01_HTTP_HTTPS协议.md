@@ -305,10 +305,12 @@ Header Fields einer zugehörigen HTTP-Antwort (Auszug)
 - `***/*; q=0.8**` bedeutet, dass der Client alle Medientypen mit einer Priorität von 0.8 (von 0..1) akzeptiert
 - `**Content-Type**`-Header gibt den MIME-Typ der Inhalte im Body der Antwort an
 
-# 7 Cookies 
+# 7 Header Field: Cookies 
 
 为什么需要 Cookies: HTTP GET/response interaction is stateless
-> Web sites and client browser use cookies to maintain some state between transactions
+> Web sites and client browser use cookies to maintain some state between transactions. 利用 cookie  with the same cookie id, 使得通信保持同一个 session 
+> cookie 有有效期  
+> Cookie ist immer auf beide Seite abgespeichert und aufeinander synschronisiert 
 
 Client-side state maintenance
 - Client stores small (?) state on behalf of server
@@ -326,6 +328,7 @@ What cookies can be used for: Cookies 的用途
 
 
 ![](image/Pasted%20image%2020250106120046.png)
+
 
 - HTTP ist ein zustandsloses Protokoll: Seitenaufrufe vom selben Browser können durch das Protokoll nicht zugeordnet werden
 - Behelfsmaßnahme: Einführung von Cookies
@@ -364,6 +367,8 @@ four components:
 
 
 ## 7.2 Der Cookie-Lebenszyklus
+
+Cookie ist immer auf beide Seite abgespeichert und aufeinander synschronisiert 
 
 ![](image/Pasted%20image%2020250106121542.png)
 
@@ -412,17 +417,22 @@ Cookie-Attribute
 ![](image/Pasted%20image%2020250106122721.png)
 
 
-# 8 Referer UND Referrer-Policy
+# 8 Header Field: Referer UND Referrer-Policy
 
 ![](image/Pasted%20image%2020250106123009.png)
 
 - Ein **_Referrer_** (**_Verweiser_**) 推荐人  bezeichnet eine Webseite von der eine andere Resource geladen wird
 - Das `**Referer**`_-Feld_ in der HTTP-Anfrage bezeichnet die Herkunft (Origin) der verweisenden Webseite und enthält optional Pfade und Query String der verweisenden Seite
+    - 用于指示当前请求是从哪个页面跳转过来的。
+    - Referer feld中写有 从那个 source origin webpage  发来申请, 要去访问另一个 webpage
+    - QuerqString 中 指定, 要查 那个具体的资源. 
+    - 
 - Beachte: `**Referer**` ist ein immer noch angewandter Schreibfehler im Feldnamen
 - Die `**_Herkunft_**` (**_Origin_**) spezifiziert das Schema (HTTP oder HTTPS), den Hostnamen und den Port einer Ressource
 - Als **_Same-Origin-Request_** bezeichnet man eine Anfrage einer Webseite von Origin A an eine Resource von Origin A
 - Als **_Cross-Origin-Request_** bezeichnet man eine Anfrage einer Webseite von Origin A an eine Resource von Origin B 
 - Die `**Referrer-Policy**` spezifiziert in der Antwort der verweisenden Webseite die Bedingungen unter denen der Referrer in nachfolgenden Anfragen gesendet wird
+    - 指定 same-origin policy 被使用 还是 cross-orgin-policy , 从而限定 接下来的 request 能否跨domain, 
 
 
 Referrer-Policies
