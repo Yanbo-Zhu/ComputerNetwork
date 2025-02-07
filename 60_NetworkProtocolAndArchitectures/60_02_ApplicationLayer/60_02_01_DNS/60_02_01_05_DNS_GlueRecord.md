@@ -6,6 +6,8 @@ https://serverfault.com/questions/309622/what-is-a-glue-record
 
 胶水记录就是域管理者向上级域管理者提供的一组主机名和IP的映射表
 ==也就是向 上级域的权威 DNS 服务器服务者  提供的 下级域的DNS 服务器对应的 IP 地址数据。==
+
+
 # 1 What are Glue Records?
 
 A glue record associates ("glue together") hostname (nameserver, or DNS ) with an IP address at the registry. These DNS records are created at the domain's registrar and provides a complete answer when the TLD nameserver returns a reference for an authoritative nameserver for a domain.

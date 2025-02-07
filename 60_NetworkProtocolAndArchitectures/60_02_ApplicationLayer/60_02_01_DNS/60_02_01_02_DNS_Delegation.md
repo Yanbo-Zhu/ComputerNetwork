@@ -3,8 +3,8 @@ https://www.cloudns.net/blog/dns-delegation/
 
 Delegating authority over a subdomain to another organization or another DNS server
 
-
 DNS Delegation will significantly increase the performance of your DNS network. Thanks to this feature, the whole DNS is so easily scalable. It will reduce the load, increase the speed and redundancy. It is used for almost all subdomains. Knowing how to manage your DNS will increase the performance greatly.
+
 # 1 DNS Zones and Domains
 
 The DNS is a hierarchy structure of domains. It starts from the root domain “.”. Underneath it, there are the TLD domains like “com”, “org”, “net” and so on. Then it is time for the domains of the second level like “co.uk” and so on. All of the domains are hosted using different DNS zones, which are globally distributed and hosted by DNS servers in different international locations.
@@ -12,6 +12,7 @@ The DNS is a hierarchy structure of domains. It starts from the root domain “.
 A Domain is a unique name, like _cloudns.net_, in the DNS. This domain has its DNS zone which hosts all the DNS records for it – [A records](https://www.cloudns.net/wiki/article/10/), [AAAA records](https://www.cloudns.net/wiki/article/11/), [MX records](https://www.cloudns.net/wiki/article/12/) and more.
 
 # 2 **What is DNS Delegation?**
+
 
 DNS Delegation, also called DNS Zone Delegation, is a process of assigning authority over a domain or subdomain to different DNS servers to keep records updated. When the [Authoritative DNS server](https://www.cloudns.net/blog/authoritative-dns-server/) to which the zone is delegated responds to DNS requests, it recursively resolves the CNAME target or responds with a referral. 
 By delegating responsibility over a subdomain to another DNS server, an organization can receive more control over the enabling and disabling services, such as mail exchange, hosted on the subdomain.

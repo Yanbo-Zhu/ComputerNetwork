@@ -4,7 +4,6 @@
 # 1 TLS Transport Layer Security (Securing TCP)
 
 TSL implemented in application layer , TLS 是在  application layer 这层实施的 TLS (Transport Layer Security): Secure TCP
-
 - widely deployed security protocol above the transport layer
     - supported by almost all browsers, web servers: https (port 443)
 - provides:
@@ -16,8 +15,18 @@ TSL implemented in application layer , TLS 是在  application layer 这层实�
     - secure socket layer (SSL) deprecated [2015]
     - TLS 1.3: RFC 8846 [2018]
 
+
+- **_Transport Layer Security_** (_**TLS**_) erweitert TCP um _Vertraulichkeit_, Datenintegrität sowie um Client- und Server-Authentisierung und Authentifizierung
+- Vorgängerbezeichnung ist als **_Secure Socket Layer_** (SSL) bekannt
+    - Versionen: SSL 1.0 bis 3.1
+    - TLS 1.0 entspricht SSL 3.1
+    - Spezifikation von TLS 1.3 seit Januar 2016
+- **_Hypertext Transfer Protocol Secure_** (HTTPS) basiert auf einer mit TLS gesicherten TCP-Verbindung - keine semantischen Unterschiede zu HTTP
+
+
 ![](image/Pasted%20image%2020241101202204.png)
 
+![](image/Pasted%20image%2020250207105326.png)
 
 ![](image/Pasted%20image%2020241101202312.png)
 
@@ -25,8 +34,31 @@ TSL implemented in application layer , TLS 是在  application layer 这层实�
 ![](image/Pasted%20image%2020241101202345.png)
 
 
+# 2 TLS Eigenschaft 
 
-# 2 Transport-layer security: what’s needed?
+
+Authentisierung und Authentifizierung
+- **_Authentisierung_** ist der Nachweis einer Person, dass sie tatsächlich diejenige Person ist, die sie vorgibt zu sein
+- Methoden der Authentisierung
+    - Geheime Informationen, die nur der Person bekannt sind (z.B. Passwort, nicht-öffentlicher Schlüssel)
+    - Identifizierungsgegenstand (z.B. Personalausweis)
+    - Biometrische Merkmale (z.B. Fingerabdruck)
+- **_Authentifizierung_** ist die Überprüfung der behaupteten Authentisierung durch die Person oder Entität gegenüber der die Authentisierung erfolgt ist
+- Beachte: die Begriffe Authentifizierung und Authentisierung werden oftmals synonym verwendet
+
+
+Vertraulichkeit
+- **_Vertraulichkeit_** bezeichnet den Schutz vor unbefugter Preisgabe von Informationen
+- Vertraulichkeit einer Nachricht wird erreicht, wenn nur die autorisierten Personen bzw. Entitäten Zugriff auf die Nachricht haben und das Lesen der Nachricht durch Dritte verhindert wird
+
+
+Integrität
+- _**Integrität**_ bedeutet, dass Daten nicht unbemerkt, z.B. durch Angreifer, verändert werden können
+- Alle Änderungen an Daten müssen für den Empfänger erkennbar sein
+
+
+
+# 3 Transport-layer security: what’s needed?
 
 let’s build a toy TLS protocol, t-tls, to see what’s needed!
 we’ve seen the “pieces” already:
@@ -92,7 +124,7 @@ we’ve seen the “pieces” already:
 
 
 
-# 3 TCP HANDSHAKE
+# 4 TCP HANDSHAKE
 
 ![](image/Pasted%20image%2020241201001000.png)
 
@@ -107,7 +139,7 @@ we’ve seen the “pieces” already:
 
 
 
-# 4 TLS Handshake 
+# 5 TLS Handshake 
 
 
 ![](image/Pasted%20image%2020241201001511.png)
@@ -121,7 +153,7 @@ we’ve seen the “pieces” already:
 - Optionally: Server can send ClientHelloRetry
 
 
-# 5 TLS  BASICS
+# 6 TLS  BASICS
 
 
 > TLS (Transport Layer Security) is a cryptographic protocol designed to provide secure communication over a network
@@ -143,7 +175,7 @@ Data Integrity: Ensures that data has not been tampered with during transmission
     - Cryptographic computations etc. not focus of this lecture, just protocol
 
 
-## 5.1 TLS IN THE PROTOCL STACK
+## 6.1 TLS IN THE PROTOCL STACK
 
 ![](image/Pasted%20image%2020241201002002.png)
 
@@ -157,7 +189,7 @@ Data Integrity: Ensures that data has not been tampered with during transmission
 - TLS 1.3 in combination with QUIC supports a faster handshake, especially with 0-RTT (Zero Round-Trip Time) connections
 
 
-## 5.2 TLS COMPONENTS
+## 6.2 TLS COMPONENTS
 
 ![](image/Pasted%20image%2020241201002246.png)
 
@@ -176,7 +208,7 @@ RECORD PROTOCOL
 - Decrypt incoming messages with the secret key
 - Verify the integrity and authenticity of the messages
 
-## 5.3 TLS Record Protocol and TLS Handshake Protocol 怎么一起工作的 
+## 6.3 TLS Record Protocol and TLS Handshake Protocol 怎么一起工作的 
 
 
 The TLS Record Protocol and the TLS Handshake Protocol are key components of the Transport Layer Security (TLS) protocol. They work together to establish and maintain a secure communication channel between two endpoints. Here's an overview:
@@ -235,7 +267,7 @@ Responsibilities:
     - Completes the handshake by finalizing parameters and enabling encrypted communication.
 
 
-# 6 TLS RECORD PROTOCOL
+# 7 TLS RECORD PROTOCOL
 
 - As soon as possible, all traffic will be encrypted
     - Depending on what mode is used (PSK or KE), starting mid handshake
@@ -254,7 +286,7 @@ Responsibilities:
 - The ==Message Authentication Code== (MAC) or Authentication Tag serves as a proof for the authenticity and integrity of the message
 
 
-## 6.1 WHAT ARE MESSAGE AUTHENTICATION CODES? (MAC)
+## 7.1 WHAT ARE MESSAGE AUTHENTICATION CODES? (MAC)
 
 Sender 端: 
 用 在 tls handshake 阶段 交换和计算所得的 secret key shared , 
@@ -278,7 +310,7 @@ Receiver 端:
 ![](image/Pasted%20image%2020241211112415.png)
 
 
-## 6.2 AUTHENTICATED ENCRYPTION WITH ASSOCIATED DATA (AEAD)
+## 7.2 AUTHENTICATED ENCRYPTION WITH ASSOCIATED DATA (AEAD)
 
 - Authentic Encryption with Associated Data (AEAD) is a cryptographic technique that combines encryption and authentication into a single, efficient operation
 - ==It ensures confidentiality, integrity, and authenticity in one step During encryption, it generates an Authentication Tag, which is automatically appended to the message==
@@ -288,402 +320,3 @@ Receiver 端:
 
 ![](image/Pasted%20image%2020241201004431.png)
 
-
-# 7 KEY AGREEMENT
-
-两方 如何 计算 secret key shared (shared key )
-
-常用的 key agreement 方法是 DH or ECDH 
-将自己的公钥交给对方, 然后用自己的私钥+对方的公钥 产生  secret key shared (shared key )
-
-## 7.1 KEY EXCHANGE
-
-已经有一个 Shared Secret 加密后 传给对方
-
-![](image/Pasted%20image%2020241201004613.png)
-
-- Key exchange is the process of securely transferring a secret (e.g., a random number to derive a symmetric key from or the direct symmetric key) between parties
-- One party generates the secret and securely sends it to the other
-- Typically one-way (secret sender -> secret receiver)
-- Example: RSA key exchange
-- Depends on secure transmission and encryption to prevent interception
-- The sender controls the key generation
-
-
-## 7.2 KEY AGREEMENT
-
-![](image/Pasted%20image%2020241201004813.png)
-
-
-不用交换 Shared secret 了, 通过交换双方的公钥私钥 直接在自己这边产生 shared secret 
-
-- Key agreement is a method where two parties collaboratively derive a shared secret without directly transmitting it
-- Both parties contribute information to generate the shared secret
-- Typically interactive (both parties exchange data to compute the secret)
-- Examples: Diffi e-Hellman key agreement, Elliptic Curve Diffi e- Hellman
-- Relies on mathematical problems (trapdoors) for security; no key is transmitted 
-- Both parties have equal participation in key generation
-
-
-## 7.3 Algorithm 去establish shared secret key
-
-
-Multiple variants, but only three covered here
-- Classical (Finite Set) Diffie-Hellman (DH): operates in the multiplicative group of integers modulo a large prime
-- Elliptic Curve Diffie-Hellman (ECDH): uses elliptic curve groups over a fi nite fi eld
-- Ephemeral Diffie-Hellman (DHE): uses temporary (ephemeral) keys for every session and may be based on DH or ECDH
-
-
-### 7.3.1 FINITE SET DH
-
-Finite Set DH is based on the Discrete Logarithm Problem
-
-![](image/Pasted%20image%2020241211114528.png)
-
-![](image/Pasted%20image%2020241211114536.png)
-
-
-![](image/Pasted%20image%2020241201010036.png)
-
-
-### 7.3.2 ELLIPTIC CURVE DH
-
-ECDH (Elliptic Curve Diffi e-Hellman) is based on Elliptic Curve Cryptography (ECC) and an equation of the form
-
-
-![](image/Pasted%20image%2020241211114605.png)
-
-![](image/Pasted%20image%2020241211114615.png)
-
-
-
-### 7.3.3 ANONYMOUS DH
-
-Anonymous DH, as shown before, is vulnerable to a man-in-the-middle attack
-
-An eavesdropper simply needs to intercept messages and pretend to be Bob towards Alice and Alice towards Bob
-
-![](image/Pasted%20image%2020241211114628.png)
-
-![](image/Pasted%20image%2020241211114644.png)
-
-### 7.3.4 AUTHENTICATED DH
-
-Authenticated DH equips the two parties with both a private and a public key, thereby allowing Alice and Bob to sign their messages in order to stop the attacker from sending messages on their behalf
-
-
-![](image/Pasted%20image%2020241211114802.png)
-
-![](image/Pasted%20image%2020241211114947.png)
-
-![](image/Pasted%20image%2020241211120608.png)
-
-
-# 8 TLS 1.2  HANDSHAKE
-
-![](image/Pasted%20image%2020241211132353.png)
-
-![](image/Pasted%20image%2020241210230240.png)
-
-
-
-## 8.1 1-RTT HANDSHAKE
-
-1. client TLS hello msg:
-    1. guesses key agreement protocol, parameters
-    2. indicates cipher suites it supports
-2. server TLS hello msg chooses
-    1. key agreement protocol, parameters
-    2. cipher suite
-    3. server-signed certificate
-3. client:
-    1. checks server certificate
-    2. generates key
-    3. can now make application request (e.g.., HTTPS GET)
-
-![](image/Pasted%20image%2020250108202619.png)
-
-### 8.1.1 Client Hello 
-
-![](image/Pasted%20image%2020241209005013.png)
-
-
-交换什么 
-1. sender 支持那些  cipher suites 
-2. sender 支持哪些 key exchange groups
-3. sender 支持那些 signature algorithms 
-4. sender 的公钥 
-5. 一个 random number to prevent replay attacks
-
----
-
-
-两方 如何 计算 secret key shared (shared key )
-
-常用的 key agreement 方法是 DH or ECDH 
-将自己的公钥交给对方, 然后用自己的私钥+对方的公钥 产生  secret key shared (shared key )
-
-
----
-
-
-- A ClientHello message is sent to the server by the client to initiate the TLS handshake
-- The message contains 
-    - a **random number** to prevent replay attacks, 
-    - ==the client's key share according to DH or ECDH== (calculated before only for this session), 
-    - a list of cipher suites and signature algorithms supported by the client
-- The message may contain optional fields like Server Name Indication (in case the server serves multiple domains), Application-Layer Protocol Negotiation, and a SessionId (for backward compatibility with TLS 1.2)
-- The message is sent in plaintext and unsigned
-
-
-### 8.1.2 ServerHello 
-
-![](image/Pasted%20image%2020241211111555.png)
-
-
-交换什么 
-1. reviver 选择那个  cipher suites, key exchange groups  用作于 之后的信息纯属 
-2. sender 支持哪些 key exchange groups
-3. reviver 的公钥 
-4. 同样的 random number to prevent replay attacks
-
-然后双方 根据 跟紫的 private key 和 public key 马上计算 shared key 
-
----
-
-- ==The server calculates an own key share (based on DH or ECDH)== and includes it in the ServerHello message
-- The message also contains a random generated by the server as well as the selected cipher suite and key exchange
-- After reception of the ServerHello,==both sides calculate the key share from their own private key and the received public key==
-- Note: The private keys and , the derived public keys and , the key share , and all keys derived from it must be deleted after session termination to guarantee Perfect Forward Secrecy
-- The ServerHello message is sent in plaintext and unsigned
-
-
-
-### 8.1.3 generate client and server-side handshake/application/finish keys through key derivation fucntion 
-
-![](image/Pasted%20image%2020241211121829.png)
-
-- After having determined the key share S , ==both sides use a Key Derivation Function, , and other data to generate client and server-side handshake keys for encryption and decryption of further handshake messages==
-- The handshake keys are ephemeral keys and need to be deleted after session termination
-- All following handshake messages are encrypted from here on
-- The server sends an EncryptedExtension message with further details of the session
-- If the server wants to authenticate the client with a certificate, it sends a Certifi cateRequest message (optional)
-
-#### 8.1.3.1 KEY DERIVATION FUNCTION
-
-
-SIMPLISTIC VIEW
-
-![](image/Pasted%20image%2020241211122010.png)
-
-DETAILLED VIEW
-![](image/Pasted%20image%2020241211122116.png)
-
-
-### 8.1.4 server sends its own certificate to client  and ServerFinished message 
-
-![](image/Pasted%20image%2020241211122533.png)
-
-Certificate交换  
-- The server sends its own certificate, which includes its identity and its long-term public key, and all intermediate certificates in a Certificate message
-
-CertificateVerfy 
-- The client checks the validity of the certificate ==(domain name, validity period, CA's signature, the integrity of the certificate chain, the availability of Signed Certificate Timestamps, and the revocation status with CRL or OCSP,...)==
-- The server authenticates towards the client with a signature built by the current Handshake Transcript Hash signed with the long-term private key that belongs to its public key, contained in the certificate
-    - Singature 的产生 是通过 Handshake Transcript Hash 去加密 一个the private key of server, 
-    - 把这个 signature交给client 
-- The Handshake Transcript Hash is a concatenation of all handshake message sent so far, in plaintext
-- The client validates the received signature – the server is now authenticated
-
-ServerFinished
-- The server compiles a ServerFinished message, which contains a HMAC built by the current Handshake Transcript Hash signed with the server-side handshake key
-    -  计算得到 HMAC , 将 这个 HMAC 交给 client, 
-    - HMAC 是用来以后计算 产生 MAC 的 
-    - shared key + hmac 算法 去 产生 MESSAGE AUTHENTICATION CODES (MAC)
-- The client validates the received HMAC
-- Note: the signature is used to authenticate the server, while the HMAC guarantees the integrity of the session and the correct derivation of the ephemeral keys
-
- Certificate and CertificateVerify can be omitted in some versions of the handshake
-
-
-### 8.1.5 server rqeust client certificate and client send ClientFinished Message  
-
-这个交换过程和 server sends its own certificate to client  的过程类似 
-
-![](image/Pasted%20image%2020241211124004.png)
-
-- If the server has requested a client certificate, the exchange of message for sending the certificate and the signature as well as all checks are mirrored to the procedures carried out for the server certificate
-- Finally, client-side and server-side ephemeral application keys (to be deleted after session termination) are determined with the Key Derivation Function, key share , and other data
-- The exchange of application data, encrypted and decrypted with the application keys, starts
-
-
-## 8.2 Packet Formats
-
-![](image/Pasted%20image%2020241210231133.png)
-
-
-## 8.3 Handshake –Extensions
-
-- In each handshake packet, many extensions fields can be included to further negotiate properties of connection
-- Some properties will result in connection failure if the peer doesn't support them, others wont
-- Also included in extensions are:
-    - Supported crypto algorithms
-    - Keying material
-    - In TLS1.3 and above, the highest supported TLS version
-    - This is done here instead of the version field in the ClientHellofor backwards compatibility in middleboxes
-
-![](image/Pasted%20image%2020241210231248.png)
-
-## 8.4 Key exchange mode
-
-- Client sends list of supported crypto suits/ elliptic curve groups
-- Client also sends required crypto bits for each group
-    - Doesn't have to be complete, can include a supported group without keying material
-    - The server will then reply with HelloRetryRequest to allow the client to generate missing keying material
-    - Useful for newer encryption schemes for which peer support is unknown and creating keying material is costly
-
-# 9 TLS 1.3 
-
-![](image/Pasted%20image%2020241211132359.png)
-
-![](image/Pasted%20image%2020241211132353.png)
-
-## 9.1 TLS 1.3 CONNECTION WITH OPENSSL
-
-![](image/Pasted%20image%2020241211125643.png)
-
-
-## 9.2 TLS1.3 通过 pre-shared key 和 0-RTT 优化 TLS 1.2的 handshake process 
-
-
-
-### 9.2.1 Abbreviated handshake WITH pre-shared key(PSK) RESUMPTION
-
-实现快速连接 
-
-- ==It reduces the overhead of the full handshake by skipping steps like certificate validation and key exchange, leveraging a previously established shared secret.==
-- This is commonly used in scenarios like session resumption to improve performance and reduce latency while maintaining security.
-- 使用从前 session 中 产生的 shared secret  key 
-
----
-
-- To enable faster reconnection, client and server do not always go through the full handshake, but perform an abbreviated handshake using using pre-shared key (PSK) resumption
-- A PSK is a cryptographic key shared between client and server after the previous handshake
-- Two handshake types
-    - PSK-Only Handshake: The PSK is the sole basis for authentication, no certificates are used and DH is not applied
-    - PSK with DHE: Combines PSK with Ephemeral Diffi e-Hellman key agreement to provide forward secrecy
-
-
-- Can be used to reduce delay by allowing 0-RTT data
-    - E.g., Client can send (early) application data with ClientHello
-- Can be either issued with NewSessionTicket messages for future connections or provisioned out of band
-    - Useful if multiple connections between same server and client are expected
-- E.g., multiple HTTP connections for websites etc.
-    - Tickets have a certain lifetime as well so they can be used for future sessions
-
-![](image/Pasted%20image%2020241211125739.png)
-
-
-
-![](image/Pasted%20image%2020241210231918.png)
-
-
-#### 9.2.1.1 **How PSK Resumption Works**
-
-Pre-Shared Key (PSK) Setup
-- A shared secret is established during a previous session handshake.
-- This secret is derived from the key exchange (e.g., Diffie-Hellman) and is securely stored as a session ticket or session ID.
-
-Client Initiates Resumption
-- The client sends a **ClientHello** message, including the session ticket or PSK identity.
-- The PSK identity indicates which shared secret the client wants to use.
-
-Server Validates and Agrees
-- If the server recognizes the PSK identity and validates it, it responds with a **ServerHello**, confirming the use of the shared PSK.
-- Both client and server use the PSK to derive new session keys for encryption.
-
-Key Derivation
-- New session keys are derived from the shared PSK and other handshake parameters (e.g., random values from the ClientHello and ServerHello).
-- These keys are used for securing the resumed session.
-
-Finished Messages
-- Both client and server exchange "Finished" messages to confirm the handshake.
-- Secure communication resumes immediately without requiring a full handshake.
-
-#### 9.2.1.2 Message Flow: Abbreviated PSK Handshake
-
-ClientHello:
-    Includes the PSK identity and supported cipher suites.
-ServerHello:
-    Confirms the use of the PSK and selects the cipher suite.
-Key Derivation:
-    Both sides derive session keys using the PSK and exchanged random values.
-Finished:
-    Client and server verify the handshake using the derived keys.
-Secure Data Transmission:
-    Encrypted communication resumes using the new session keys.
-
-
-### 9.2.2 0-RTT HANDSHAKE
-
-![](image/Pasted%20image%2020241211131015.png)
-
-![](image/Pasted%20image%2020250108202721.png)
-
-- A 0-RTT (Zero Round-Trip Time) handshake allows a client to send data immediately after the ClientHello message without waiting for the server's response
-- It reduces latency, making connections faster, especially for applications requiring low delays, such as web browsing, APIs, and real-time communication
-- ==The 0-RTT handshake relies on a PSK established during a prior connection==
-- Application-data is encrypted with a PSK-derived key
-- Advantages: reduced latency and efficiency
-- Disadvantages: Risk of replay attacks and no forward secrecy
-
-- initial hello message contains encrypted application data!
-    - “resuming” earlier connection between client and server
-    - application data encrypted using “resumption master secret” from earlier connection
-- vulnerable to replay attacks!
-    - maybe OK for get HTTP GET or client requests not modifying server state
-## 9.3 TLS 1.3 CIPHER SUITES
-
-![](image/Pasted%20image%2020241211131415.png)
-
-
-- A cipher suite is a standardized set of algorithms used to secure communications in protocols like TLS
-- “cipher suite”: algorithms that can be used for key generation, encryption, MAC, digital signature
-- ==A cipher suite for TLS 1.2 defines==
-    - the key agreement algorithm (RSA, DH, ECDHE), 
-    - the authentication algorithm (RSA, ECDSA), 
-    - the encryption algorithm (AES, ChaCha20, RC4) as well as its encryption strength and mode, 
-    - the Message Authentication Code algorithm
-- In TLS 1.3 the cipher suites are simplified and ==only specify the encryption algorithm and hash function==
-- TLS 1.3 only uses DHE and PSK as key agreement algorithms, while the required authentication algorithms depend on the used certificates
-
-- TLS: 1.3 (2018): more limited cipher suite choice than TLS 1.2 (2008)
-    - only 5 choices, rather than 37 choices
-    - requires Diffie-Hellman (DH) for key exchange, rather than DH or RSA
-    - combined encryption and authentication algorithm (“authenticated encryption”) for data rather than serial encryption, authentication
-        - 4 based on AES\
-    - HMAC uses SHA (256 or 284) cryptographic hash function
-
-![](image/Pasted%20image%2020241211131948.png)
-
-
-# 10 不同 TLS 1.2 vs 1.3 vs Quic 
-
-
-
-![](image/Pasted%20image%2020241211132037.png)
-
-![](image/Pasted%20image%2020241211132353.png)
-
-![](image/Pasted%20image%2020241211132359.png)
-
-![](image/Pasted%20image%2020241211132153.png)
-
-
----
-
-QUIC: 
-
-![](image/Pasted%20image%2020241211132221.png)
-
-![](image/Pasted%20image%2020241211132413.png)

@@ -6,13 +6,51 @@ https://www.sfn.cn/news/technology/detail/217.html?navId=22
 
 DNS是互联网中一项重要的基础服务，它将简单易记的域名转换成可由计算机识别的IP地址，以便客户端对服务器的正常访问。而由DNS构建起的域名与IP地址之间的对应关系，称之为“DNS记录”（record）。通过设置不同的解析记录，可以实现对主机名不同的解析效果，从而满足不同场景下的域名解析需求。常见的域名解析记录，主要有以下几种类型。
 
-![](image/Pasted%20image%2020241030084712.png)
 
+distributed database storing resource records (RR)
+Record as stored by name server (domain name, value, type, TTL)
+RR format: (name, value, type, ttl)
+TTL: Time to live
 
+- Daten einer Zone werden in _**Resource Records**_ innerhalb einer Zonendatei gespeichert
+- Resource Records sind auf allen Name Servern verfügbar
+- _**Primary Name Server**_ enthält das Original der Resource Records
+- _**Secondary Name Server**_ beziehen die Resource Records vom Primary Name Server
 
+# 2 解析 
 
+![](image/Pasted%20image%2020250207163339.png)
 
-![](image/Pasted%20image%2020241031221142.png)
+![](image/Pasted%20image%2020250207163417.png)
+# 3 Type 
+
+- Verschiedene Arten von Resource Records
+    - _**SOA Record**_: Start of Authority, zeigt die Zuständigkeit für eine Domain an
+    - _**NS Record**_: Name Server, Auflistung der zuständigen Name Server
+    - _**A Record**_: Address, Abbildung Adresse->Name
+    - _**PTR Record**_: Pointer, Abbildungen Name->Adresse
+    - _**CNAME**_: Canonical Name für Aliases
+    - und weitere....
+
+- type=A
+    - name is hostname
+    - value is IP address
+    - Ex: (www2.tkn.tu-berlin.de, 130.149.110.75, A, TTL)
+- type=NS
+    - name is domain (e.g., foo.com)
+    - value is hostname of authoritative name server for this domain
+    - Value = domain name of the host providing a name service
+    - Ex: (tkn.tu-berlin.de, ns.tu-berlin.de, NS, TTL)
+- type-CNAME
+    - name is alias name for some "canonical" (the real) name 
+    - canonical name of a host, alias name
+    - www.ibm.com is really servereast.backup2.ibm.com
+    - value is canonical name
+    - Ex: (cic.cs.princeton.edu, cicada.cs.princeton.edu, CNAME, TTL)
+- type-MX
+    - value is name of mailserver associated with name
+    - Value = domain name of the email server
+    - Ex: (tkn.tu-berlin.de, b1861 .mx.srv.dfn.de, MX, TTL)
 
 
  一、A记录
@@ -60,20 +98,8 @@ URL转发，是指通过服务器的特殊设置，将当前访问的域名指�
 隐性URL：与显性URL类似，但隐性转发会隐藏真实的目标地址，地址栏中显示为仍为此前输入的地址。 
 
 
-# 2 ns record 的 例子 
 
-一个 ns record 
-name: tu-berlin.de
-value: ns.tu-berlin.de
-
-ns.tu-berlin.de is the host of authoritative name server for the domain tu-berlin.de 
-ns.tu-berlin.de  上面存着很多的 entry  (name , ip addresse 的对应)
-一旦访问 xxx.tu-berlin.de    就回去 ns.tu-berlin.de  这个 name server 上查询 xxx.tu-berlin.de 对应的 ip addresse 
-
-
-
-
-# 3 record 之间的冲突共存
+# 4 record 之间的冲突共存
 
  在RR值相同的情况下，同一条线路下，在几种不同类型的解析中不能共存(X为不允许)：
 
@@ -86,13 +112,25 @@ X：在相同的RR值情况下，同一条线路下，不同类型的解析记�
 ![](image/Pasted%20image%2020240305110041.png)
 
 
+# 5 DNS NS record
 
-# 4 DNS A Record
+一个 ns record 
+name: tu-berlin.de
+value: ns.tu-berlin.de
+
+ns.tu-berlin.de is the host of authoritative name server for the domain tu-berlin.de 
+ns.tu-berlin.de  上面存着很多的 entry  (name , ip addresse 的对应)
+一旦访问 xxx.tu-berlin.de    就回去 ns.tu-berlin.de  这个 name server 上查询 xxx.tu-berlin.de 对应的 ip addresse 
+
+
+
+
+# 6 DNS A Record
 
 https://www.cloudflare.com/zh-cn/learning/dns/dns-records/dns-a-record/
 
 
-## 4.1 什么是 DNS A记录？
+## 6.1 什么是 DNS A记录？
 
 “A”代表“地址”，这是最基础的 [DNS](https://www.cloudflare.com/learning/dns/what-is-dns/) 记录类型：它表示给定[域](https://www.cloudflare.com/learning/dns/glossary/what-is-a-domain-name/)的 [IP 地址](https://www.cloudflare.com/learning/dns/glossary/what-is-my-ip-address/)。比如，拉取 cloudflare.com 的 DNS 记录，A 记录当前返回的 IP 地址为：104.17.210.9。
 
@@ -108,7 +146,7 @@ A 记录只保存 IPv4 地址。如果一个网站拥有 IPv6 地址，它将改
 
 绝大多数网站只有一个 A 记录，但可以有多个。一些高知名度网站有数个不同的 A 记录，作为[循环负载均衡](https://www.cloudflare.com/learning/dns/glossary/round-robin-dns/)技术的一部分，该技术可以将请求流量分配到托管相同内容的多个 IP 地址中的一个。
 
-## 4.2 什么时候使用 DNS A 记录？
+## 6.2 什么时候使用 DNS A 记录？
 
 A 记录最常见的用途是 IP 地址查找：将域名（如“cloudflare.com”）与 IPv4 地址进行匹配。这让用户的设备能够连接和加载网站，而无需用户记住和输入实际的 IP 地址。用户的 Web 浏览器通过向 [DNS 解析器](https://www.cloudflare.com/learning/dns/dns-server-types/)发送查询来自动完成此过程。
 
@@ -116,7 +154,7 @@ DNS A 记录还用于运营基于域名系统的黑洞名单 (DNSBL)。DNSBL 可
 
 如果您想了解有关 DNS A 记录的更多信息，可在[此处](https://tools.ietf.org/html/rfc1035)查看原始 1987 RFC，其中定义了 A 记录和几个其他 DNS 记录类型。要了解有关域名系统工作原理的更多信息，请参阅[什么是 DNS？](https://www.cloudflare.com/learning/dns/what-is-dns/)
 
-# 5 DNS PTR (pointer record)
+# 7 DNS PTR (pointer record)
 
 https://www.cloudflare.com/learning/dns/dns-records/dns-ptr-record/
 
@@ -125,7 +163,7 @@ https://www.cloudflare.com/learning/dns/dns-records/dns-ptr-record/
  长成这样 ： 1.2.0.192.in-addr.arpa  -> ivu-cloud.local 
  
 ![](image/Pasted%20image%2020240305110222.png)
-## 5.1 What is a DNS PTR record
+## 7.1 What is a DNS PTR record
 
 A Record:  domain name -> ip addresss
 DNS pointer record:  ip addesse -> domain name 
@@ -138,7 +176,7 @@ When a user attempts to reach a domain name in their browser, a DNS lookup occur
 A reverse DNS lookup is the opposite of this process: it is a query that starts with the IP address and looks up the domain name.
 
 
-## 5.2 How are DNS PTR records stored
+## 7.2 How are DNS PTR records stored
 
 In IPv4:
 While DNS A records are stored under the given domain name, DNS PTR records are stored under the IP address — reversed, and with ".in-addr.arpa" added. For example, the PTR record for the IP address 192.0.2.255 would be stored under "255.2.0.192.in-addr.arpa".
@@ -152,7 +190,7 @@ In IPv6:
 IPv6 addresses are constructed differently from IPv4 addresses, and IPv6 PTR records exist in a different namespace within .arpa. IPv6 PTR records are stored under the IPv6 address, reversed and converted into four-bit sections (as opposed to 8-bit sections, as in IPv4), plus ".ip6.arpa".
 
 
-# 6 Wildcard domain
+# 8 Wildcard domain
 
 
 A wildcard DNS record is a record in a DNS zone that will match requests for non-existent domain names. 
