@@ -38,12 +38,12 @@ TSL implemented in application layer , TLS 是在  application layer 这层实�
 
 
 Authentisierung und Authentifizierung
-- **_Authentisierung_** ist der Nachweis einer Person, dass sie tatsächlich diejenige Person ist, die sie vorgibt zu sein
+- **_Authentisierung_** ist der Nachweis einer Person, dass sie tatsächlich diejenige Person ist, die sie vorgibt zu sein.  就是自己的身份证
 - Methoden der Authentisierung
     - Geheime Informationen, die nur der Person bekannt sind (z.B. Passwort, nicht-öffentlicher Schlüssel)
     - Identifizierungsgegenstand (z.B. Personalausweis)
     - Biometrische Merkmale (z.B. Fingerabdruck)
-- **_Authentifizierung_** ist die Überprüfung der behaupteten Authentisierung durch die Person oder Entität gegenüber der die Authentisierung erfolgt ist
+- **_Authentifizierung_** ist die Überprüfung der behaupteten Authentisierung durch die Person oder Entität gegenüber der die Authentisierung erfolgt ist. 就是别人检查你的身份证
 - Beachte: die Begriffe Authentifizierung und Authentisierung werden oftmals synonym verwendet
 
 
