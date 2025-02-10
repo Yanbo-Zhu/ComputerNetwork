@@ -116,7 +116,8 @@ Persistent HTTP (HTTP1.1):
     - completely replaces file that exists at specified URL with content in entity body of POST HTTP request message
     - Erstellen oder Ersetzen einer Ressource (unter einer gegebenen URI) mit der mitgeschickten Repräsentation in der Nachricht
     - 更新或创建资源，发送完整的资源信息。
-    -  彻底覆盖原来的数据, 为 idempotent
+    -  彻底覆盖原来的数据, 为 idempotent.  
+    - ganze teil von entry andern  (与 PATCH 不同支出 )
 - DELETE: 
     - löscht eine Ressource. (Beispiel: Entfernen eines Datensatzes)
     - requests headers (only) that would be returned if specified URL were requested with an HTTP GET method.
@@ -126,7 +127,9 @@ Persistent HTTP (HTTP1.1):
     - 类似 GET，但只获取响应头。
     - Identisch zu GET, außer dass der Server nur mit einem Header antwortet
 - OPTIONS: fragt die unterstützten HTTP-Methoden des Servers ab.
+    - 就是 server 支持那些 http request method, like GET, POST 等 
 - PATCH: Teilaktualisierung einer Ressource.
+    - nur ein teil von entry andern
 
 
 - **GET**:
