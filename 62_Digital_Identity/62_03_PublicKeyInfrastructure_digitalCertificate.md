@@ -1,43 +1,46 @@
 
-# 1 digital certificate  到底来用来干啥的 
+# 1 digital certificate 到底来用来干啥的 
 
 用来在 TLS handshake 的时候, 验证 双方之间的身份 , 直到双方是谁 , 然后 可以开始传输信息了
 传输信息的时候不用到 digital certificate 
 
 ![](image/Pasted%20image%2020241121143103.png)
 
+---
 
-# 2 COMPONENTS
+
+PROBLEM: MAN-IN-THE-MIDDLE ATTACK 
+How can you make sure that Alice really has Bob's public key and not that of a person claiming to be Bob?
+
+![](image/Pasted%20image%2020250215142613.png)
+
+
+
+# 2 Purpose & Components
 
 
 ![](image/Pasted%20image%2020241120224015.png)
 
 
-**Certificate Authority (CA)**
-Trusted entity responsible for issuing and managing digital certificates. It verifies digital identities before issuing certificates and signs them to affirm their validity
-获取用户的私人信息和用户的公钥,  用ca自己的私钥 将 用户的私人信息和用户的公钥 加密为 用户自己的Digital Certifi cates.   
-用户A 从 ca 处 获得 用户a自己的数字证书 和 ca自己的公钥 
-用户A将自己的数字证书 给用户b,  用户b 用 ca的公钥 解密 用户A的数字证书
+- A _**Public Key Infrastructure**_ (_**PKI**_) provides services to secure communication and manage the lifecycle of digital certificates and encryption keys
+- It facilitates secure data exchange and authentication by the use of public key cryptography
+- It supports the secure distribution of public keys by preventing man-in-the-middle attacks and verifies the identity of users, devices, and systems in digital communications
 
+Identity Management Functions of a PKI 
+- **Authentication**: PKI ensures the identity of entities (users, devices, servers, service providers) in a communication process
+- **Confidentiality**: It facilitates secure, encrypted communication to protect data privacy
+- **Integrity**: PKI helps verify that data has not been tampered with during transmission
+- **Non-repudiation**: It provides proof of the origin of data
 
-**Registration Authority (RA)**
-Acts as an intermediary between service provider and the CA. It helps verify identities before passing certificate signing requests to the CA
-
-
-**Digital Certificates**
-Electronic credentials that bind a public key to the identity of its owner
-
-
-**Public and Private Keys**
-Used to encrypt/decrypt data or to create/verify digital signatures Certificate Repository: Secure storage location where issued certificates and their status are stored
-
-
-**Certificate Revocation List**
-List of digital certificates that have been revoked before their delivery date
-证明那些 digital certificate 还有效
-
-**End Entities**
-Users, devices, and systems that use digital certificates to secure their communication
+ 
+ Components of a PKI 
+- **Certificate Authority** (**CA**): Trusted entity responsible for issuing and managing digital certificates. It verifies digital identities before issuing certificates and signs them to affirm their validity
+- **Registration Authority** (**RA**): Acts as an intermediary between service provider and the CA. It helps verify identities before passing certificate signing requests to the CA
+- **Digital Certificates**: Electronic credentials that bind a public key to the identity of its owner
+- **Public** and **Private Keys**: Used to encrypt/decrypt data or to create/verify digital signatures
+- **Certificate Repository**: Secure storage location where issued certificates and their status are stored
+- **Certificate Revocation List**: List of digital certificates that have been revoked before their delivery date
+- **End Entities**: Users, devices, and systems that use digital certificates to secure their communication
 
 # 3 CERTIFICATES
 
@@ -261,9 +264,9 @@ Certificate:
 ![](image/Pasted%20image%2020241121095539.png)
 
 - Version 
-    - version 3 is the latest and most popular version of the X.509 certifi cation format
+    - version 3 is the latest and most popular version of the X.509 certification format
 - Serial Number
-    - contains the serial number of the certificate, defined by the certifi cation authority, and used for certificate revocation
+    - contains the serial number of the certificate, defined by the certification authority, and used for certificate revocation
 - Issuer
     - defines certification authority with their common name and country
     - `Issuer: C = NL, O = GEANT Vereniging, CN = GEANT OV RSA CA 4`
@@ -322,6 +325,7 @@ Certificate:
     - Lists the policies under which the certificate was issued
 - Authority Information Access
     - includes the URL of the CA where issued certificate can be retrieved and the URL of the Online Certificate Status Protocol (OCSP) responder
+
 ### 5.2.1 CT Precertificate SCTSs
 
 ![](image/Pasted%20image%2020241121101524.png)
@@ -331,12 +335,14 @@ CT Precertificate SCTSs
 - Certificate Transparency (CT) helps to monitor and audit SSL/TLS certificates and requires that all issued certificates are logged in publicly accessible, tamperproof certificate logs
 - Helps to detect and prevent the unauthorized issuance of certificates
 - A Signed Certificate Timestamp (SCT) is a proof that the CA has submitted the certificate to several event logs
-- Modern browsers refuse to accept a certificate if it does not contain timestamps as an evidence of the submissions of the certifi cate to the logs
+- Modern browsers refuse to accept a certificate if it does not contain timestamps as an evidence of the submissions of the certificate to the logs
 - Detailed description later in this chapter
 
 
 
 ### 5.2.2 key usages
+
+
 - Key Usage
     - Defines the permitted uses of the key (e.g., digital signature, key encipherment)
     - `X509v3 Key Usage: critical , Digital Signature, Key Encipherment`   
@@ -360,7 +366,7 @@ If a certificate contains both a key usage extension and an extended key usage e
 
 
 
-# 6 DOMAIN, ORGANIZATION, AND EXTENDED VERIFICATION
+# 6 Domain, Organization and extended vertification 
 
 
 
@@ -454,19 +460,27 @@ The Baseline Requirements document defi nes the rules a CA has to follow:
 
 
 
-# 8 THE LIFE CYCLE OF A DIGITAL CERTIFICATE
+# 8 THE LIFE CYCLE OF A DIGITAL CERTIFICATE (重要 )
 
 ![](image/Pasted%20image%2020241121105231.png)
 
 
-# 9 generate a digital certificate 
+# 9 Generate a digital certificate  (重要 )
+
+
+
+
 
 ## 9.1 GENERATING A CERTIFICATE SIGNING REQUEST WITH OPENSSL
 
 
+申请人 将 自己的信息和公钥 交给 CA , ca 产生证书 
+
 A _certificate signing request_ (_CSR_) is one of the first steps towards getting your own SSL/TLS certificate.
 
-In [public key infrastructure](https://en.wikipedia.org/wiki/Public_key_infrastructure "Public key infrastructure") (PKI) systems, a **certificate signing request** (**CSR** or **certification request**) is a message sent from an applicant to a [certificate authority](https://en.wikipedia.org/wiki/Certificate_authority "Certificate authority") of the public key infrastructure (PKI) in order to apply for a [digital identity certificate](https://en.wikipedia.org/wiki/Public_key_certificate "Public key certificate"). The CSR usually contains the public key for which the certificate should be issued, identifying information (such as a domain name) and a proof of authenticity including integrity protection (e.g., a digital signature). T
+In [public key infrastructure](https://en.wikipedia.org/wiki/Public_key_infrastructure "Public key infrastructure") (PKI) systems, a **certificate signing request** (**CSR** or **certification request**) is a message sent from an applicant to a [certificate authority](https://en.wikipedia.org/wiki/Certificate_authority "Certificate authority") of the public key infrastructure (PKI) in order to apply for a [digital identity certificate](https://en.wikipedia.org/wiki/Public_key_certificate "Public key certificate"). 
+
+The CSR usually contains the public key for which the certificate should be issued, identifying information (such as a domain name) and a proof of authenticity including integrity protection (e.g., a digital signature). T
 
 ![](image/Pasted%20image%2020241121105714.png)
 
@@ -478,6 +492,7 @@ In [public key infrastructure](https://en.wikipedia.org/wiki/Public_key_infrastr
 ![](image/Pasted%20image%2020241121105744.png)
 
 
+
 ![](image/Pasted%20image%2020241121105751.png)
 
 
@@ -487,7 +502,7 @@ In [public key infrastructure](https://en.wikipedia.org/wiki/Public_key_infrastr
 
 ![](image/Pasted%20image%2020241121105905.png)
 
-ACME (Automated Certifi cate Management Environment) is a set of protocols designed to automate the processes of certifi cate issuance, renewal, and revocation
+ACME (Automated Certificate Management Environment) is a set of protocols designed to automate the processes of certificate issuance, renewal, and revocation 
 Popularized by the free CA Let's Encrypt, but meanwhile widely adopted by other CAs and applications as well
 
 ADVANTAGES OF ACME
@@ -520,16 +535,27 @@ Revocation: If a certificate needs to be revoked, the ACME client can communicat
 # 10 CERTIFICATE CHAINS
 
 
+## 10.1 Root vs Intermediate vs Issuing CAs
+
+
 ![](image/Pasted%20image%2020241121110507.png)
 
 
-
-![](image/Pasted%20image%2020241121110528.png)
+|                                   | Root CA                                                                   | Intermediate CA                              | Issuing CA                                                            |
+| --------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------- |
+| **Position in Hierarchy**         | Top-level, ultimate trust                                                 | Between root and issuing CAs                 | Lowest level, closest to end-entites                                  |
+| **Trust Level**                   | Trusted by operating systems and browsers                                 | Inherits trust from Root CA                  | Inherits trust from Intermediate CA                                   |
+| **Primary Purpose**               | Issues certificates to intermediates                                      | Issues certificates to Issuing CAs           | Issues certificates to end-entities                                   |
+| **Security**                      | Highest; private keys are kept offline                                    | Moderate; online/offline mix of private keys | Private keys are generally kept online                                |
+| **Certificate Validity**          | Longest (20-30 years)                                                     | Moderate (10-15 years)                       | Shortest (3-5 years)                                                  |
+| **Risk Management**               | Limited use to prevent compromise                                         | Shares trust distribution from Root          | Regularly updated and revocable                                       |
+| **Interaction with End-entities** | No interactions                                                           | Rare interactions                            | Directly issued end-entity certificates                               |
+| **Certificates Issued**           | Own Root certificates (via self-issuing) and Intermediate CA certificates | Issuing CA certificates                      | Domain, Organization, and Extended Validation end-entity certificates |
 
 
 ![](image/Pasted%20image%2020241121142110.png)
 
-系统会一口气拿到 三个证书 (root ca 颁发的 certificate, intermediate ca 颁发的 certificate, 和 由 最末ca 给 end-entity办法的 certificate ).  然后用 root 的 certificate 一级级向下解锁 
+系统会一口气拿到 三个证书 (root ca 颁发的 certificate, intermediate ca 颁发的 certificate, 和 由 最末ca 给 end-entity颁发的 certificate ).  然后用 root 的 certificate 一级级向下解锁 
 
 ---
 
@@ -539,7 +565,7 @@ Revocation: If a certificate needs to be revoked, the ACME client can communicat
 
 
 - CA3 生成 tu.berlin 的 电子签名 
-- tu.berlin 的 电子签名  包含了 tu.berlin 的 publickey, tu.berlin的 信息 和 signature which is issued by CA3 
+- tu.berlin 的 电子certificate  包含了 tu.berlin 的 publickey, tu.berlin的 信息 和 signature which is issued by CA3 
 - Signature which is issued by CA3  是 CA3用自己的 private key  生成的.  CA3将这个 digital signture 封印在 tu.berlin 的 电子签名 中
 - ca3 sign the certificate of tu.berlin though the private key of ca3 
 - 用 CA3 的public key  可以去解密  tu.berlin 的电子签名 
@@ -552,7 +578,7 @@ Root 都会放到 os 系统内置的  root stores 里面
 ![](image/Pasted%20image%2020241121112500.png)
 
 
-- The Trusted Root Certificate Store or Trusted Root Store or Root Store is the place in an operating system or browser that stores root certificates
+- The `Trusted Root Certificate Store` or `Trusted Root Store` or `Root Store` is the place in an operating system or browser that stores root certificates
 - Contains pre-installed or manually added root certificates, establishing trust for certificates issued by those root CAs
 - The store is managed by the operating system (such as Windows, macOS, or Linux) or by individual applications, like web browsers (Firefox)
 - ==When a certificate is presented during an SSL/TLS handshake, the system checks the certificate chain against the Trusted Root Store to determine if it can trust the certificate==
@@ -562,6 +588,7 @@ Root 都会放到 os 系统内置的  root stores 里面
 # 11 CERTIFICATE REVOCATION
 
 revocation 就是 使得一个  issued digital certificate 失效 
+revoked certificate
 
 Certificate revocation is the process of invalidating an issued digital certificate before its scheduled expiration date
 Once a certificate is revoked, it is no longer trusted by browsers, operating systems, and other applications

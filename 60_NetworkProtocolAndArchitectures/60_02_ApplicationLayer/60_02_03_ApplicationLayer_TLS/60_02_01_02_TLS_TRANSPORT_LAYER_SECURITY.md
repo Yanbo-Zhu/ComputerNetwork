@@ -126,6 +126,7 @@ we’ve seen the “pieces” already:
 
 # 4 TCP HANDSHAKE
 
+
 ![](../../../62_Digital_Identity/image/Pasted%20image%2020241201001000.png)
 
 
@@ -135,7 +136,6 @@ we’ve seen the “pieces” already:
 - TCP handshake is initiated by one side with an empty TCP segment (no body) with a set SYN flag
 - TCP handshake is acknowledged by the other side with an empty TCP segment with set SYN and ACK flags
 - Each connection have a full roundtrip of latency before any application data can be transferred
-
 
 
 
@@ -287,6 +287,8 @@ Responsibilities:
 
 
 ## 7.1 WHAT ARE MESSAGE AUTHENTICATION CODES? (MAC)
+
+==mac 类似于  sign 在 plaintext 后面的  digital signature ==
 
 Sender 端: 
 用 在 tls handshake 阶段 交换和计算所得的 secret key shared , 
