@@ -126,7 +126,7 @@ we’ve seen the “pieces” already:
 
 # 4 TCP HANDSHAKE
 
-![](image/Pasted%20image%2020241201001000.png)
+![](../../../62_Digital_Identity/image/Pasted%20image%2020241201001000.png)
 
 
 - All TCP connection begin with a three-way handshake
@@ -142,7 +142,7 @@ we’ve seen the “pieces” already:
 # 5 TLS Handshake 
 
 
-![](image/Pasted%20image%2020241201001511.png)
+![](../../../62_Digital_Identity/image/Pasted%20image%2020241201001511.png)
 
 - TLS uses a two-way handshake to negotiate cryptographic parameters to protect connection
 - Client starts by sending ClientHello
@@ -177,7 +177,7 @@ Data Integrity: Ensures that data has not been tampered with during transmission
 
 ## 6.1 TLS IN THE PROTOCL STACK
 
-![](image/Pasted%20image%2020241201002002.png)
+![](../../../62_Digital_Identity/image/Pasted%20image%2020241201002002.png)
 
 ![](image/Pasted%20image%2020250108202257.png)
 
@@ -191,7 +191,7 @@ Data Integrity: Ensures that data has not been tampered with during transmission
 
 ## 6.2 TLS COMPONENTS
 
-![](image/Pasted%20image%2020241201002246.png)
+![](../../../62_Digital_Identity/image/Pasted%20image%2020241201002246.png)
 
 
 HANDSHAKE PROTOCOL
@@ -277,7 +277,7 @@ Responsibilities:
 - Keys (should be) updated periodically for various reasons
 
 
-![](image/Pasted%20image%2020241201002527.png)
+![](../../../62_Digital_Identity/image/Pasted%20image%2020241201002527.png)
 
 
 - Data is exchanged in records between the communicating parties
@@ -307,7 +307,7 @@ Receiver 端:
 - The Receiver then recalculates the MAC on the received message using the same key – if calculated and received MAC match, the message is verified
 - Hash-based Message Authentication Code (HMAC) is an algorithm that uses a cryptographic hash function (like SHA-256) along with a secret to produce the authentication code
 
-![](image/Pasted%20image%2020241211112415.png)
+![](../../../62_Digital_Identity/image/Pasted%20image%2020241211112415.png)
 
 
 ## 7.2 AUTHENTICATED ENCRYPTION WITH ASSOCIATED DATA (AEAD)
@@ -318,5 +318,5 @@ Receiver 端:
 - AEAD includes additional, unencrypted metadata (Associated Data) in the authentication process 
 - The metadata is unencrypted and known to both parties
 
-![](image/Pasted%20image%2020241201004431.png)
+![](../../../62_Digital_Identity/image/Pasted%20image%2020241201004431.png)
 
