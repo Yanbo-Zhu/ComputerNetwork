@@ -19,9 +19,13 @@ TTL: Time to live
 
 # 2 解析 
 
+movie.edu 中 包含  很多他 的 secondary  canonical domain   (in  A record )
+
 ![](image/Pasted%20image%2020250207163339.png)
 
 ![](image/Pasted%20image%2020250207163417.png)
+
+
 # 3 Type 
 
 - Verschiedene Arten von Resource Records
@@ -154,6 +158,8 @@ DNS A 记录还用于运营基于域名系统的黑洞名单 (DNSBL)。DNSBL 可
 
 如果您想了解有关 DNS A 记录的更多信息，可在[此处](https://tools.ietf.org/html/rfc1035)查看原始 1987 RFC，其中定义了 A 记录和几个其他 DNS 记录类型。要了解有关域名系统工作原理的更多信息，请参阅[什么是 DNS？](https://www.cloudflare.com/learning/dns/what-is-dns/)
 
+
+
 # 7 DNS PTR (pointer record)
 
 https://www.cloudflare.com/learning/dns/dns-records/dns-ptr-record/
@@ -188,6 +194,7 @@ in-addr.arpa is the namespace within .arpa for reverse DNS lookups in IPv4.
 
 In IPv6:
 IPv6 addresses are constructed differently from IPv4 addresses, and IPv6 PTR records exist in a different namespace within .arpa. IPv6 PTR records are stored under the IPv6 address, reversed and converted into four-bit sections (as opposed to 8-bit sections, as in IPv4), plus ".ip6.arpa".
+
 
 
 # 8 Wildcard domain
